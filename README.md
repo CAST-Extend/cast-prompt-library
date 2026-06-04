@@ -1,6 +1,6 @@
 # CAST Prompt Library for MCP
 
-A community prompt library for [CAST Imaging](https://www.castsoftware.com/imaging), [CAST Highlight](https://www.castsoftware.com/highlight), and CAST Gatekeeper — designed for use with VS Code Copilot Chat and the CAST MCP servers.
+A community prompt library for [CAST Imaging](https://www.castsoftware.com/imaging), [CAST Highlight](https://www.castsoftware.com/highlight), and  [CAST Gatekeeper](https://www.castsoftware.com/gatekeeper) — designed for use with MCPware agents like VS Code Copilot Chat in agent mode and the CAST MCP servers.
 
 **🔗 Live portal: [https://cast-extend.github.io/cast-prompt-library/](https://cast-extend.github.io/cast-prompt-library/)**
 
