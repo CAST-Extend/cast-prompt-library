@@ -22,20 +22,56 @@ Go to **[https://cast-extend.github.io/cast-prompt-library/](https://cast-extend
 
 ### 2. Connect CAST Imaging MCP to VS Code
 
-Create or update `.vscode/mcp.json` in your repo:
+Create or update `.vscode/mcp.json` in your repo, update the URL for MCP as per your deployment:
 
 ```json
 {
+  "inputs": [
+    {
+      "id": "highlight-key",
+      "type": "promptString",
+      "description": "CAST Highlight API Key",
+      "password": true
+    },
+    {
+      "id": "imaging-key",
+      "type": "promptString",
+      "description": "CAST Imaging API Key",
+      "password": true
+    },
+    {
+      "id": "gatekeeper-key",
+      "type": "promptString",
+      "description": "CAST Gatekeeper API Key",
+      "password": true
+    }
+  ],
   "servers": {
-    "cast-imaging": {
-      "type": "sse",
-      "url": "http://<YOUR-CAST-IMAGING-SERVER>/mcp/",
+    "highlight": {
+      "type": "http",
+      "url": "http://cast.demo.highlight/mcp/",
       "headers": {
-        "x-api-key": "<YOUR-API-KEY>"
+        "highlight_domain": "123",
+        "highlight_api_key": "${input:highlight-key}"
+      }
+    },
+    "imaging": {
+      "type": "http",
+      "url": "http://cast.demo.imaging/mcp/",
+      "headers": {
+        "x-api-key": "${input:imaging-key}"
+      }
+    },
+    "gatekeeper": {
+      "type": "http",
+      "url": "http://cast.demo.gatekeeper/mcp/gatekeeper",
+      "headers": {
+        "x-api-key": "${input:gatekeeper-key}"
       }
     }
   }
 }
+
 ```
 
 Replace `<YOUR-CAST-IMAGING-SERVER>` with your server address and `<YOUR-API-KEY>` with your CAST Imaging API key.
