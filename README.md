@@ -143,9 +143,9 @@ Prompt format:
 
 ## Requirements
 
-- VS Code with GitHub Copilot
+- MCPWare agents like GitHub Copilot in Agent mode with an IDE like VSCode
 - CAST Imaging, Highlight, or Gatekeeper with MCP enabled
-- Network access from your machine to the CAST server (VPN is fine — MCP calls run locally from VS Code, not via the cloud)
+- Application is already onboarded to the CAST product - Highlight, Imaging, and Gatekeeper
 
 ---
 
