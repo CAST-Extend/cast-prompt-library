@@ -74,7 +74,7 @@ Create or update `.vscode/mcp.json` in your repo, update the URL for MCP as per 
 
 ```
 
-Replace `<YOUR-CAST-IMAGING-SERVER>` with your server address and `<YOUR-API-KEY>` with your CAST Imaging API key.
+Replace `url` with your server address and `<YOUR-API-KEY>` with your CAST Highlight, Imaging, and Gatekeeper API key.
 
 ### 3. Pick a prompt
 
