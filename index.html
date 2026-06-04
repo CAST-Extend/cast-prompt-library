@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>CAST Imaging — Prompt Library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+:root{
+  --bg:#07101d;--surf:#0c1725;--surf2:#121f32;
+  --bdr:#1a2d45;--bdr2:#223850;
+  --acc:#f97316;--acc-dim:rgba(249,115,22,.1);
+  --txt:#d8eaf8;--mut:#5f7a96;--dim:#354e68;
+  --green:#34d399;--blue:#60a5fa;--purple:#a78bfa;
+  --yellow:#fbbf24;--rose:#fb7185;--sky:#38bdf8;--red:#f43f5e;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);display:flex;flex-direction:column;font-size:14px;line-height:1.5}
+button,input{font-family:inherit}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+
+/* Header */
+#hdr{display:flex;align-items:center;gap:16px;padding:10px 18px;background:var(--surf);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:30px;height:30px;background:linear-gradient(135deg,#f97316,#dc5b0a);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.brand-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;line-height:1.2}
+.brand-sub{font-size:10px;color:var(--mut);font-weight:500;letter-spacing:.03em}
+#sw{flex:1;max-width:480px;margin:0 auto}
+#sq{width:100%;background:var(--surf2);border:1px solid var(--bdr);border-radius:7px;padding:7px 13px;color:var(--txt);font-size:12px;outline:none}
+#sq:focus{border-color:var(--acc)}
+#sq::placeholder{color:var(--mut)}
+.hc{font-size:11px;color:#7aa2c4;white-space:nowrap}
+
+/* Layout */
+#body{display:flex;flex:1;overflow:hidden;min-height:0}
+
+/* Sidebar */
+#sb{width:210px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--bdr);overflow-y:auto;padding:8px 0 16px}
+.cb{width:100%;display:flex;align-items:center;gap:8px;padding:8px 14px;background:transparent;border:none;border-left:2px solid transparent;color:#7aa2c4;text-align:left;font-size:11px;font-weight:400;cursor:pointer;transition:all .12s}
+.cb:hover{background:rgba(255,255,255,.04);color:#d8eaf8}
+.cb.act{background:var(--acc-dim);border-left-color:var(--acc);color:var(--txt);font-weight:600}
+.ci{font-size:13px;flex-shrink:0}.cl{flex:1}
+.cc{font-size:9px;color:#5f7a96;background:#0d1e30;border-radius:9px;padding:1px 5px}
+.fs{margin:14px 14px 8px;border-top:1px solid #1e3450;padding-top:12px}
+.ft{font-size:9px;color:#7aa2c4;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.fb{display:flex;align-items:center;width:100%;text-align:left;padding:5px 8px;border-radius:5px;background:transparent;border:1px solid transparent;color:#7aa2c4;font-size:11px;margin-bottom:2px;cursor:pointer;transition:all .12s}
+.fb:hover{background:rgba(255,255,255,.04);color:#b0cce6}
+.fb.act{background:var(--acc-dim);border-color:rgba(249,115,22,.3);color:var(--txt);font-weight:500}
+
+/* Card grid */
+#mn{flex:1;overflow-y:auto;padding:14px;min-width:0}
+#cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:9px;padding:13px;text-align:left;color:var(--txt);cursor:pointer;transition:border-color .15s,box-shadow .15s;width:100%}
+.card:hover{border-color:var(--bdr2);box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.card.sel{border-color:var(--acc);background:var(--surf2);box-shadow:0 0 0 1px rgba(249,115,22,.25)}
+.ch{display:flex;align-items:flex-start;gap:8px;margin-bottom:9px}
+.cion{font-size:16px;margin-top:1px;flex-shrink:0}
+.ct{font-size:12px;font-weight:600;line-height:1.3;margin-bottom:3px}
+.cc2{font-size:9px;font-weight:500}
+.cp{font-size:10px;color:#6a8aaa;line-height:1.5;margin-bottom:9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cf{display:flex;flex-wrap:wrap;gap:4px}
+.bdg{font-size:8px;font-weight:700;letter-spacing:.04em;padding:2px 6px;border-radius:4px;text-transform:uppercase}
+.cplx-Simple{background:rgba(52,211,153,.1);color:var(--green)}
+.cplx-Intermediate{background:rgba(251,191,36,.1);color:var(--yellow)}
+.cplx-Advanced{background:rgba(249,115,22,.1);color:var(--acc)}
+.emp{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--mut)}
+.emp-i{font-size:36px;margin-bottom:12px}
+
+/* Detail panel */
+#det{width:0;overflow:hidden;flex-shrink:0;background:var(--surf);border-left:1px solid var(--bdr);display:flex;flex-direction:column;transition:width .2s ease}
+#det.open{width:420px}
+.dh{padding:13px 15px;border-bottom:1px solid var(--bdr);display:flex;align-items:flex-start;gap:10px;flex-shrink:0}
+.dt{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;line-height:1.3;margin-bottom:6px}
+.dc{background:none;border:none;color:var(--mut);font-size:20px;line-height:1;padding:0;margin-left:auto;flex-shrink:0;cursor:pointer}
+.dc:hover{color:var(--txt)}
+.chb{padding:8px 15px;border-bottom:1px solid var(--bdr);background:rgba(249,115,22,.04);display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.chl{font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.08em}
+.chbtn{font-size:10px;color:var(--mut);background:var(--surf2);border:1px solid var(--bdr);border-radius:5px;padding:3px 9px;cursor:pointer}
+.chbtn:hover{border-color:var(--acc);color:var(--acc)}
+.vs{padding:12px 15px;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.stl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7aa2c4;margin-bottom:6px}
+.vl{font-size:11px;color:#b0cce6;display:block;margin-bottom:4px;font-weight:600}
+.vd{color:#7aa2c4;font-weight:400}
+.vi{width:100%;background:#0d1e30;border:1px solid #2a4a6a;border-radius:5px;padding:8px 11px;color:#e8f4ff;font-size:12px;outline:none;font-family:'DM Sans',sans-serif;margin-bottom:8px}
+.vi:focus{border-color:var(--acc);background:#0f2235}
+.vi::placeholder{color:#4d7a9e}
+.ps{padding:12px 15px;flex:1;overflow-y:auto;min-height:0}
+.pb{background:var(--surf2);border:1px solid var(--bdr);border-radius:7px;padding:13px;font-size:11px;line-height:1.8;font-family:'JetBrains Mono',monospace;color:var(--txt);white-space:pre-wrap;word-break:break-word}
+.vh{color:var(--acc);background:rgba(249,115,22,.1);border-radius:3px;padding:0 2px}
+.eb{margin-top:10px;padding:9px 11px;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.15);border-radius:7px}
+.et{font-size:8px;color:var(--green);font-weight:700;letter-spacing:.1em;margin-bottom:3px}
+.ev{font-size:10px;color:var(--mut);line-height:1.5}
+.tr{margin-top:10px;display:flex;flex-wrap:wrap;gap:4px}
+.tg{font-size:8px;padding:2px 6px;border-radius:9px;background:var(--surf2);border:1px solid var(--bdr2);color:#5f7a96}
+
+/* Actions */
+.act-area{padding:12px 15px;border-top:1px solid var(--bdr);flex-shrink:0}
+.btn-copy{
+  width:100%;padding:11px 0;border-radius:8px;
+  font-size:12px;font-weight:600;cursor:pointer;
+  background:rgba(249,115,22,.15);border:1px solid var(--acc);color:var(--acc);
+  transition:all .15s;letter-spacing:.02em;
+}
+.btn-copy:hover{background:rgba(249,115,22,.25)}
+.btn-copy.done{background:rgba(52,211,153,.15);border-color:var(--green);color:var(--green)}
+.copy-note{font-size:9px;color:#5f7a96;text-align:center;margin-top:6px;line-height:1.5}
+</style>
+</head>
+<body>
+<div id="hdr">
+  <div class="brand">
+    <div class="logo">⬡</div>
+    <div>
+      <div class="brand-name">CAST Prompt Library for MCP</div>
+    </div>
+  </div>
+  <div id="sw"><input type="text" id="sq" placeholder="Search prompts, tags, use cases…"></div>
+  <div class="hc"><span id="cnt">0</span> prompts</div>
+</div>
+<div id="body">
+  <div id="sb"></div>
+  <div id="mn"><div id="cg"></div></div>
+  <div id="det"></div>
+</div>
+<script>
+const CATS=[
+  {id:"all",label:"All Prompts",icon:"◈",color:"#6b82a0"},
+  {id:"discovery",label:"App Discovery",icon:"⬡",color:"#60a5fa"},
+  {id:"quality",label:"Code Quality & Tech Debt",icon:"◈",color:"#fbbf24"},
+  {id:"impact",label:"Impact Analysis",icon:"◎",color:"#f97316"},
+  {id:"docs",label:"Documentation & Biz Rules",icon:"▣",color:"#a78bfa"},
+  {id:"arch",label:"Architecture Analysis",icon:"◫",color:"#34d399"},
+  {id:"modern",label:"Modernization & Cloud",icon:"△",color:"#38bdf8"},
+  {id:"onboard",label:"Legacy Onboarding",icon:"◇",color:"#fb7185"},
+  {id:"security",label:"Security & OSS",icon:"⬟",color:"#f43f5e"},
+];
+const CMAP=Object.fromEntries(CATS.map(c=>[c.id,c]));
+const CC={Simple:"#34d399",Intermediate:"#fbbf24",Advanced:"#f97316"};
+const TC={starter:"#60a5fa",power:"#a78bfa"};
+const PC={Developer:"#34d399",Architect:"#60a5fa","Dev Manager":"#fb7185"};
+const P=[
+{id:"d1",cat:"discovery",title:"List All Applications",profile:["Architect","Dev Manager","Developer"],complexity:"Simple",tier:"starter",vars:[],chain:{},tags:["inventory","portfolio"],prompt:"Get the application list from CAST Imaging MCP server. For each application, list its name, basic information, and available stats."},
+{id:"d2",cat:"discovery",title:"Portfolio Overview & Dependencies",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[],chain:{},tags:["portfolio","planning","dependencies"],prompt:"List all applications available in CAST Imaging. For each application, retrieve its stats including size, complexity metrics, and technology breakdown. Then fetch inter-application dependencies to identify coupling between apps. Finally, retrieve the external packages used by each application.\n\nProduce a consolidated portfolio overview report in markdown with:\n- Application inventory table (name, size, tech stack, complexity)\n- Dependency heat map (which apps are most coupled)\n- Technology landscape summary\n- Modernization priority score based on tech debt + dependencies"},
+{id:"d3",cat:"discovery",title:"Transaction Inventory Count",profile:["Developer","Architect"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{next:"a1"},tags:["inventory","transactions"],prompt:"How many transactions are there in the {{APP_NAME}} application? List all transaction names and types.",expected:"Full list of all transactions with total count"},
+{id:"d4",cat:"discovery",title:"App High-Level Summary",profile:["Architect","Dev Manager"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"}],chain:{},tags:["discovery","summary"],prompt:"Summarize the high-level functionality of the {{APP_NAME}} application including inter-app dependencies using CAST Imaging MCP Server. Save the output as {{APP_NAME}}-App-Summary.md"},
+{id:"q1",cat:"quality",title:"Deprecated Methods Inventory",profile:["Developer","Architect"],complexity:"Simple",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{next:"q2"},tags:["tech-debt","deprecated"],prompt:"Can you please list all the deprecated methods in the {{APP_NAME}} application? Please provide the full signature of each method and don't aggregate methods with the same name.",expected:"35 deprecated methods"},
+{id:"q2",cat:"quality",title:"Deprecated Methods + API Endpoint Usage",profile:["Developer","Architect"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{prev:"q1"},tags:["tech-debt","deprecated","api-endpoints"],prompt:"Can you please list all the deprecated methods in the {{APP_NAME}} application including the third party library methods and check if they are called by API endpoints? Please provide the full signature of each method and don't aggregate methods with the same name, list each single method.",expected:"15 unused + 20 used deprecated methods"},
+{id:"q3",cat:"quality",title:"Full ISO 5055 Compliance Analysis",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"}],chain:{},tags:["iso-5055","quality","compliance","security"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nObjective: For application APP_NAME, perform a full ISO 5055 compliance analysis:\n\nStep 1 — Use application_iso_5055_explorer to list all ISO 5055 characteristics and their associated weaknesses.\nStep 2 — Retrieve quality insights filtered to iso-5055 violations. For each characteristic (Reliability, Security, Performance, Maintainability), get violation counts.\nStep 3 — For the top 3 worst-performing characteristics, retrieve individual violations with object names and locations.\nStep 4 — Cross-reference with CVE data to identify if security weaknesses overlap with ISO 5055 security violations.\n\nOutput: A structured ISO 5055 compliance report with scores per characteristic, top violations by severity, and a risk remediation priority list."},
+{id:"q4",cat:"quality",title:"Structural Flaws — Top Violations + Portfolio Spread",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"}],chain:{},tags:["structural-flaws","quality","portfolio"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nObjective: For application APP_NAME, retrieve all structural flaw quality insights. Then get the top 5 structural flaw types ranked by occurrence count and retrieve their detailed violation objects.\n\nAlso run the same structural flaw query across the entire portfolio to identify which applications share the same top structural flaws.\n\nOutput: Ranked flaw table with occurrence counts, affected object locations, and portfolio-wide comparison."},
+{id:"q5",cat:"quality",title:"Tech Debt Finding — Locate in Code",profile:["Developer"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"},{name:"FINDING_NAME",desc:"Exact name of the tech debt finding",ex:"Avoid using binary data type in mainframes"}],chain:{next:"q6"},tags:["tech-debt","findings"],prompt:"For the technical debt finding \"{{FINDING_NAME}}\", list the findings and where they are used in the {{APP_NAME}} code. Create a markdown file with all instances, their locations, and remediation suggestions."},
+{id:"q6",cat:"quality",title:"Tech Debt — Remediation with Code Fix",profile:["Developer"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"},{name:"FINDING_NAME",desc:"Tech debt finding name",ex:"Validation Error – Employee Number Zero"}],chain:{prev:"q5"},tags:["tech-debt","remediation","code-fix"],prompt:"For tech debt finding \"{{FINDING_NAME}}\" in the {{APP_NAME}} application, provide:\n1. Full impact analysis — which objects are affected and how they are used\n2. Remediation code — updated code suitable for implementation in VS Code\n3. Developer review notes explaining the fix rationale\nSave the complete output as a markdown file."},
+{id:"q7",cat:"quality",title:"Most Critical Structural Flaws",profile:["Architect"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["structural-flaws","quality"],prompt:"Where are the most critical structural flaws in the {{APP_NAME}} codebase that are actively hurting reliability, performance, and maintainability — and how severe are they?"},
+{id:"q8",cat:"quality",title:"Tech Debt Quantification",profile:["Dev Manager"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["tech-debt","metrics"],prompt:"How much technical debt does the {{APP_NAME}} application actually have — and which parts of the application are contributing most to it?"},
+{id:"q9",cat:"quality",title:"Dead Code & Complexity Hotspots",profile:["Developer"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["dead-code","complexity"],prompt:"Which parts of the {{APP_NAME}} codebase are unreachable, unused, or so complex that no one wants to touch them?"},
+{id:"q10",cat:"quality",title:"Complex Transactions — Quality Overlay",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"}],chain:{},tags:["transactions","complexity","quality"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nFor application APP_NAME:\nStep 1 — List all transactions, sorted to identify the longest/most complex flows.\nStep 2 — For the top 10 transactions by node count, retrieve their complexity details and complexity_graph.\nStep 3 — Retrieve quality insights for objects within those transactions to identify which carry the highest technical debt.\n\nOutput: Transaction complexity leaderboard with quality debt overlay, identifying the highest-risk transaction paths for remediation."},
+{id:"q11",cat:"quality",title:"360° Modernization Readiness Assessment",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"},{name:"TECH_STACK",desc:"Technology stack e.g. Java, .NET",ex:"Java"}],chain:{},tags:["modernization","quality","cloud","assessment"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nObjective: For the {{TECH_STACK}} application APP_NAME:\n\nStep 1 — Retrieve application stats (size, complexity, technology profile).\nStep 2 — Retrieve structural flaw and ISO 5055 quality insights.\nStep 3 — List all available advisors (code improvement recommendations).\nStep 4 — For the top 10 most-violated advisor rules, get specific occurrences.\nStep 5 — Retrieve cloud readiness insights and migration blockers.\n\nOutput: A 360° modernization readiness assessment: quality baseline, technical debt inventory, advisor-driven refactoring backlog, and cloud migration risk profile."},
+{id:"q12",cat:"quality",title:"Resource & Energy Consumption Hotspots",profile:["Architect"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["green","performance","sustainability"],prompt:"Which parts of the {{APP_NAME}} application are consuming excessive computing resources or energy — and what are the specific code patterns driving that consumption?"},
+{id:"i1",cat:"impact",title:"API Endpoints Calling a Method",profile:["Developer","Architect"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"},{name:"METHOD_SIGNATURE",desc:"Full method signature",ex:"getAdminFormatedAmount(MerchantStore store, BigDecimal amount)"}],chain:{next:"i2"},tags:["impact","api-endpoints","method-callers"],prompt:"Can you simply list all the API Endpoints calling the \"{{METHOD_SIGNATURE}}\" Java method from the {{APP_NAME}} application? Count and list those API Endpoints in a markdown file.",expected:"10 API Endpoints"},
+{id:"i2",cat:"impact",title:"Cross-App Endpoint Usage Check",profile:["Developer","Architect"],complexity:"Intermediate",tier:"power",vars:[{name:"SOURCE_APP",desc:"App where endpoints are defined",ex:"Shopizer-Backend"},{name:"CONSUMER_APP_1",desc:"First consumer application",ex:"Shopizer-WebFrontEnd"},{name:"CONSUMER_APP_2",desc:"Second consumer application",ex:"Shopizer-WebAdmin"}],chain:{prev:"i1"},tags:["impact","cross-app","dependencies"],prompt:"Can you please check if the endpoints found in the previous step are used in the {{CONSUMER_APP_1}} application or the {{CONSUMER_APP_2}} application? For each endpoint, indicate which consumer app uses it or if it is unused.",expected:"3 → Web FE, 5 → Admin FE, 2 unused"},
+{id:"i3",cat:"impact",title:"Blast Radius for a Code Object",profile:["Developer","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"},{name:"OBJECT_NAME",desc:"Full object name/signature",ex:"com.castsoftware.demo.getemployee(String name, String EmpNo)"}],chain:{},tags:["impact","blast-radius","dependencies"],prompt:"APP_NAME = '{{APP_NAME}}'\nOBJECT_NAME = '{{OBJECT_NAME}}'\n\nIn application APP_NAME, search for the object named OBJECT_NAME.\n\nOnce found, perform a complete blast-radius analysis:\n1. Inward dependencies — all callers (direct and transitive)\n2. Outward dependencies — all callees (what this object depends on)\n3. Transaction membership — which transactions include this object\n4. Data graph membership — which data entities interact with this object\n\nOutput: A complete change impact report showing exactly what would be affected if this object were modified or removed."},
+{id:"i4",cat:"impact",title:"Inter-Application Dependency Analysis",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"TARGET_APP",desc:"The application to focus on",ex:"Demo"}],chain:{},tags:["impact","inter-app","portfolio"],prompt:"TARGET_APP = '{{TARGET_APP}}'\n\nObjective: Analyze inter-application dependencies across the entire portfolio, focusing on application TARGET_APP.\n\nStep 1 — Get inward and outward dependency counts for all apps.\nStep 2 — For TARGET_APP, retrieve detailed dependencies showing exact interaction points with each connected application.\nStep 3 — Identify the most critical integration points — which calls/objects cross the application boundary.\n\nOutput: Dependency risk report with coupling level, integration hotspots, and recommendations for decoupling."},
+{id:"i5",cat:"impact",title:"Database Change Impact",profile:["Developer"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"},{name:"DB_OBJECT",desc:"Table or stored procedure name",ex:"EMPLOYEE_RECORDS"}],chain:{},tags:["impact","database","dependencies"],prompt:"If I change or remove the {{DB_OBJECT}} database table/stored procedure in {{APP_NAME}}, what will break — show me every upstream and downstream dependency."},
+{id:"i6",cat:"impact",title:"Service Refactor Blast Radius",profile:["Architect"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"},{name:"SERVICE_NAME",desc:"Service or component to refactor",ex:"PaymentService"}],chain:{},tags:["impact","refactor","blast-radius"],prompt:"We need to refactor the {{SERVICE_NAME}} in {{APP_NAME}}. What is the blast radius — how many other components, layers, or applications are affected?"},
+{id:"i7",cat:"impact",title:"Tight Coupling & Safe Isolation Points",profile:["Architect"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["impact","coupling","architecture"],prompt:"Which parts of the {{APP_NAME}} codebase are most tightly coupled and would be hardest to change safely — and which parts could we isolate with minimal disruption?"},
+{id:"i8",cat:"impact",title:"Program Full Dependency + Tech Debt Audit",profile:["Developer","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"},{name:"PROGRAM_NAME",desc:"Program or transaction name",ex:"COBCIO15"}],chain:{},tags:["impact","dependencies","tech-debt","mainframe"],prompt:"Get details on all dependencies for the {{PROGRAM_NAME}} program in the {{APP_NAME}} application, including:\n- Database operations (reads, writes, tables accessed)\n- Technical debt issues (ISO 5055 violations) within the call chain\n- Cyclomatic complexity metrics per node\n- Inward callers and outward callees\n\nCreate a markdown file with the complete dependency and tech debt audit for this program."},
+{id:"doc1",cat:"docs",title:"API Endpoint — Full Documentation",profile:["Developer","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"},{name:"API_PATH",desc:"Exact API endpoint path",ex:"api/v1/auth/cart/{}/payment/init/"},{name:"HTTP_METHOD",desc:"HTTP method",ex:"POST"}],chain:{next:"doc2"},tags:["documentation","api","technical"],prompt:"Can you please provide a short documentation of the API endpoint with the exact name \"{{API_PATH}}\" {{HTTP_METHOD}} operation in the {{APP_NAME}} application? This documentation will have 2 sections:\n1. Technical documentation — call graph, dependencies, cyclomatic complexity per node\n2. Functional documentation — business purpose, inputs/outputs, business rules\n\nList all call graph nodes with a cyclomatic complexity above 10. Put everything into a markdown file."},
+{id:"doc2",cat:"docs",title:"Business Rules from API Endpoint",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"},{name:"API_PATH",desc:"Exact API endpoint path",ex:"api/v1/auth/cart/{}/payment/init/"},{name:"HTTP_METHOD",desc:"HTTP method",ex:"POST"}],chain:{prev:"doc1"},tags:["business-rules","documentation","api"],prompt:"Please extract the Business Rules from the API endpoint \"{{API_PATH}}\" {{HTTP_METHOD}} operation in the {{APP_NAME}} application by looking at the source code of each transaction node.\n\nOrganize business rules with numbered codes for tracking. Include:\n- Rule ID and description\n- Source code location\n- Conditions and branching logic\n- Data validation rules\nPut everything into a markdown file."},
+{id:"doc3",cat:"docs",title:"Automated Documentation Workflow",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"},{name:"BUSINESS_DOMAIN_KEYWORD",desc:"Keyword to filter transactions by business domain",ex:"Trade"},{name:"CRITICAL_OBJECT_PATTERN",desc:"Pattern to identify critical objects",ex:"Payment"}],chain:{},tags:["documentation","knowledge-capture","automation"],prompt:"APP_NAME = '{{APP_NAME}}'\nBUSINESS_DOMAIN_KEYWORD = '{{BUSINESS_DOMAIN_KEYWORD}}'\nCRITICAL_OBJECT_PATTERN = '{{CRITICAL_OBJECT_PATTERN}}'\n\nFor application APP_NAME, execute an automated documentation workflow:\n\nStep 1 — List all transactions containing \"BUSINESS_DOMAIN_KEYWORD\".\nStep 2 — For each transaction found, retrieve its AI-generated summary and call graph complexity.\nStep 3 — Identify objects matching CRITICAL_OBJECT_PATTERN across those transactions.\nStep 4 — For each critical object, retrieve its inward/outward dependencies and source code snippet.\nStep 5 — Compile into a living documentation package: transaction catalog, object dependency map, and code context for each critical path."},
+{id:"doc4",cat:"docs",title:"Mainframe Program Business Rules",profile:["Developer","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"LA Mainframe"},{name:"PROGRAM_NAME",desc:"COBOL program name",ex:"LAMD2D022"}],chain:{},tags:["mainframe","business-rules","cobol"],prompt:"For the {{APP_NAME}} application, for program {{PROGRAM_NAME}}, extract the business rules, organizing them with numbered codes for easier tracking.\n\nThe end goal is to document in a technology-agnostic way the behavior of this program, focusing on:\n- Core business logic and decision points\n- Data transformations and validations\n- Integration points with other programs\n- Add a Mermaid control flow diagram for each major rule"},
+{id:"doc5",cat:"docs",title:"COBOL Transaction Mapping",profile:["Developer","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"LA Mainframe"}],chain:{},tags:["mainframe","transactions","cobol","reverse-engineering"],prompt:"For the {{APP_NAME}} application, for each COBOL program, identify which transactions it is a part of and list where it is called from.\n\nProduce a transaction mapping document showing:\n- Program to Transaction membership\n- Call hierarchy (who calls each program)\n- Entry point identification\n- Cross-reference table of all COBOL programs and their transaction ownership"},
+{id:"doc6",cat:"docs",title:"CAST Rule Compliance Documentation",profile:["Developer","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"DC Portal"},{name:"CAST_RULE",desc:"Specific CAST Imaging rule to check",ex:"Avoid missing release of stream connection after COMMIT or ROLLBACK"}],chain:{},tags:["compliance","security","performance","rules"],prompt:"Using CAST Imaging MCP for the {{APP_NAME}} application, based on the CAST Imaging rule \"{{CAST_RULE}}\":\n1. List all violations of this rule with object names and file locations\n2. For each violation, retrieve the source code snippet\n3. Provide remediation code for each pattern of violation\n4. Create a technical documentation file with all findings and fixes"},
+{id:"a1",cat:"arch",title:"Group Transactions by Functional Domain",profile:["Architect","Dev Manager"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{prev:"d3",next:"a2"},tags:["architecture","monolith","domains"],prompt:"Can you group the transactions in {{APP_NAME}} by functional domain? Use CAST Imaging to retrieve all transactions, then cluster them into logical business domains. List each domain with its transactions.",expected:"Between 10-18 functional domains"},
+{id:"a2",cat:"arch",title:"Domain Dependency Count Matrix",profile:["Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{prev:"a1",next:"a3"},tags:["architecture","monolith","dependencies","matrix"],prompt:"Based on the functional domains identified for {{APP_NAME}}, can you build the dependency matrix between those functional domains showing the dependency count between each pair? Identify highly coupled and loosely coupled domain pairs.",expected:"Matrix identifying highly and lowly dependent domains"},
+{id:"a3",cat:"arch",title:"Domain Dependency Type Matrix",profile:["Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{prev:"a2"},tags:["architecture","monolith","dependencies","types"],prompt:"Can you build a matrix showing the TYPE of dependencies between the functional domains in {{APP_NAME}}? Classify each dependency as: data access, function call, shared object, or cross-layer call. Highlight the dependency types that pose the highest modernization risk.",expected:"Matrix with dependency types between domains"},
+{id:"a4",cat:"arch",title:"Architecture Integrity Assessment",profile:["Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"},{name:"DOMAIN_NAME",desc:"Domain to assess",ex:"Payroll Processing"}],chain:{},tags:["architecture","integrity","conformance","violations"],prompt:"Using CAST Imaging MCP, assess the current architectural integrity of the {{DOMAIN_NAME}} domain in {{APP_NAME}} and validate architecture conformance, with primary focus on:\n- Identifying existing structural violations and erosion patterns\n- Cross-layer shortcuts and business logic leakage\n- Unauthorized dependencies between layers\n- Architecture conformance score\n\nPropose remediation steps and validate what the architecture would look like after proposed changes."},
+{id:"a5",cat:"arch",title:"Multi-Level Architectural Graph",profile:["Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"},{name:"CORE_MODULE",desc:"Module to focus the architecture view on",ex:"Add Employee"}],chain:{},tags:["architecture","graph","layers","components"],prompt:"APP_NAME = '{{APP_NAME}}'\nCORE_MODULE = '{{CORE_MODULE}}'\n\nFor the application APP_NAME, retrieve the architectural graph at these abstraction levels in sequence: layer, component, and sub-component. Then focus the architecture view on the CORE_MODULE component.\n\nAnalyze and report:\n- Layer structure: how many layers, what are they, how do they relate\n- Component breakdown: major components per layer and their interconnections\n- Sub-component drill-down for CORE_MODULE: detailed internal structure\n- Architectural smell detection: missing layers, bypassed layers, circular dependencies"},
+{id:"a6",cat:"arch",title:"Microservices Community Detection",profile:["Architect"],complexity:"Advanced",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["architecture","microservices","monolith"],prompt:"We want to break the {{APP_NAME}} monolith into microservices. Which functional communities exist in the codebase and which ones can realistically be extracted first?"},
+{id:"m1",cat:"modern",title:"Microservices Decomposition Plan",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"}],chain:{},tags:["modernization","microservices","decomposition","planning"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nFor monolithic application APP_NAME, identify microservices decomposition candidates:\n\nStep 1 — Retrieve the component-level architectural graph to see all major modules.\nStep 2 — List all transactions and map which components each transaction touches.\nStep 3 — Use quality insights to identify structural flaws that would complicate extraction.\nStep 4 — Analyze inter-component dependency density to find low-coupling clusters.\n\nOutput: A decomposition roadmap ranking extraction candidates by feasibility, with coupling scores, shared data object risks, and recommended extraction sequence."},
+{id:"m2",cat:"modern",title:"Cloud Migration Readiness (Windows App)",profile:["Dev Manager","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"}],chain:{},tags:["cloud","modernization","windows","migration"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nFor the Windows application APP_NAME:\nStep 1 — Retrieve all cloud maturity quality insights and their violations.\nStep 2 — List all external packages and analyze package interactions to identify Windows-specific dependencies.\nStep 3 — Retrieve the architectural graph at layer level to identify hard-coded infrastructure assumptions.\nStep 4 — Retrieve cloud-related advisors and their occurrences.\n\nOutput: Cloud migration readiness report with blocker categories, affected object counts, remediation effort estimates, and a prioritized cloud-enablement backlog."},
+{id:"m3",cat:"modern",title:"Portfolio Modernization Business Case",profile:["Dev Manager","Architect"],complexity:"Advanced",tier:"power",vars:[],chain:{},tags:["modernization","portfolio","business-case","planning"],prompt:"Retrieve a full portfolio-level dataset for building a modernization business case:\n\nStep 1 — List all applications with their stats (size, complexity, technology).\nStep 2 — Get quality insights across all applications for structural-flaws, iso-5055, cve, and cloud patterns.\nStep 3 — Analyze inter-application dependencies to identify coupling risk.\nStep 4 — Retrieve benchmark data to compare applications against industry standards.\n\nOutput: Executive-ready modernization business case with application risk scores, total technical debt quantification, cloud readiness scores, and recommended modernization sequence with ROI rationale."},
+{id:"m4",cat:"modern",title:"Data Layer Analysis for DB Migration",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"},{name:"SCHEMA_PREFIX",desc:"Database schema prefix to filter tables",ex:"CAST"}],chain:{},tags:["modernization","database","migration","data-layer"],prompt:"APP_NAME = '{{APP_NAME}}'\nSCHEMA_PREFIX = '{{SCHEMA_PREFIX}}'\n\nFor application APP_NAME, perform a complete data layer analysis:\n\nStep 1 — List all database tables. For tables matching SCHEMA_PREFIX, retrieve their columns.\nStep 2 — List all data call graphs and retrieve the full graph for the top 5 most complex ones.\nStep 3 — Identify objects that perform direct SQL (not via ORM) and flag as migration risk.\nStep 4 — Map data flows: which transactions read/write which tables.\n\nOutput: Database dependency map, migration risk assessment by table, and effort estimate for data layer modernization."},
+{id:"m5",cat:"modern",title:"Mainframe Rebuild Discovery Package",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"}],chain:{},tags:["mainframe","rebuild","modernization","discovery"],prompt:"You are a software architecture and application discovery expert.\n\nAnalyze the {{APP_NAME}} mainframe application using CAST Imaging. Your goal is to produce a comprehensive application discovery and business functionality document to support rebuilding the system in Java or a modern platform.\n\nInclude:\n1. Application inventory (programs, transactions, data objects, size metrics)\n2. Business domain identification and functional grouping\n3. Transaction flow analysis for the top 20 most-used paths\n4. Data model and database interaction patterns\n5. Integration points (inbound/outbound interfaces)\n6. Technical debt and code quality risk areas\n7. Rebuild complexity estimate by domain"},
+{id:"m6",cat:"modern",title:"Cloud Migration Blockers (Specific Objects)",profile:["Dev Manager"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["cloud","migration","blockers","containers"],prompt:"What are the specific blockers stopping us from containerizing or moving {{APP_NAME}} to the cloud — show me the actual objects, not just categories of risk."},
+{id:"m7",cat:"modern",title:"Legacy Platform Migration Scope",profile:["Dev Manager"],complexity:"Advanced",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"},{name:"SOURCE_PLATFORM",desc:"Current platform or database",ex:"Oracle / DB2 / Mainframe COBOL"},{name:"TARGET_PLATFORM",desc:"Target platform",ex:"PostgreSQL / AWS / Java"}],chain:{},tags:["mainframe","migration","database","modernization"],prompt:"We're migrating the {{APP_NAME}} application from {{SOURCE_PLATFORM}} — what is the full scope of work and where are the highest-risk conversion points for migration to {{TARGET_PLATFORM}}?"},
+{id:"o1",cat:"onboard",title:"Application Overview Walkthrough",profile:["Architect"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["onboarding","discovery","overview"],prompt:"What does {{APP_NAME}} actually do — walk me through its main components, layers, and how they connect?"},
+{id:"o2",cat:"onboard",title:"New Developer Onboarding Guide",profile:["Developer"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["onboarding","developer","data-flow"],prompt:"I'm new to the {{APP_NAME}} codebase. Which modules should I understand first, and how does data flow end-to-end through a typical top-down transaction?"},
+{id:"o3",cat:"onboard",title:"Technology & Framework Inventory",profile:["Dev Manager"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["onboarding","technology","frameworks","obsolescence"],prompt:"What technologies, frameworks, and database engines is {{APP_NAME}} using and how old or obsolete are they?"},
+{id:"o4",cat:"onboard",title:"Domain Deep-Dive Summary",profile:["Architect","Dev Manager"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"},{name:"DOMAIN_NAME",desc:"Business domain to summarize",ex:"Payroll Processing"}],chain:{},tags:["onboarding","domain","documentation"],prompt:"Summarize the {{DOMAIN_NAME}} domain in {{APP_NAME}}, covering key programs and transactions used for this functionality. Save the output as a Markdown file named {{DOMAIN_NAME}}_domain.md"},
+{id:"o5",cat:"onboard",title:"Application Epics Discovery",profile:["Dev Manager","Architect"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Recipe"}],chain:{next:"o6"},tags:["onboarding","epics","planning","modernization"],prompt:"Could you give the potential list of epics for the {{APP_NAME}} application using CAST Imaging for context? Group transactions and business functions into logical epics that could form the basis of a modernization backlog."},
+{id:"o6",cat:"onboard",title:"Business Rules Documentation Package",profile:["Dev Manager","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Recipe"}],chain:{prev:"o5"},tags:["onboarding","business-rules","documentation"],prompt:"Can you produce a business rules documentation for the {{APP_NAME}} application? Use CAST Imaging for context — retrieve transaction paths, source code snippets, and object relationships to extract and document the core business rules in a technology-agnostic way."},
+{id:"s1",cat:"security",title:"Critical CVE OSS Component Scan",profile:["Architect","Dev Manager"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{},tags:["security","cve","oss","vulnerabilities"],prompt:"Can you please tell me if the {{APP_NAME}} application is using 3rd party OSS components with critical CVEs? If yes, can you please list the objects using those unsecured 3rd party components and rank them by CVE severity?",expected:"5 critical CVEs; complete list of affected objects"},
+{id:"s2",cat:"security",title:"Outdated / End-of-Life OSS Libraries",profile:["Dev Manager"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["security","oss","libraries","vulnerabilities"],prompt:"What open-source libraries in {{APP_NAME}} are outdated, end-of-life, or carry known security vulnerabilities — and which parts of the codebase are exposed?"},
+];
+
+const PMAP=Object.fromEntries(P.map(p=>[p.id,p]));
+let S={cat:"all",profile:"all",product:"all",query:"",sel:null,vars:{}};
+
+function filt(){
+  return P.filter(p=>{
+    if(S.cat!=="all"&&p.cat!==S.cat)return false;
+    if(S.profile!=="all"&&!p.profile.includes(S.profile))return false;
+    if(S.product!=="all"&&(p.prod||"imaging")!==S.product)return false;
+    if(S.query){const q=S.query.toLowerCase();return p.title.toLowerCase().includes(q)||p.prompt.toLowerCase().includes(q)||p.tags.some(t=>t.includes(q));}
+    return true;
+  });
+}
+
+function sub(p){
+  let t=p.prompt;
+  (p.vars||[]).forEach(v=>{const val=S.vars[v.name]||("{{"+v.name+"}}");t=t.split("{{"+v.name+"}}").join(val);});
+  return t;
+}
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function bdg(text,cls){return "<span class='bdg "+cls+"'>"+esc(text)+"</span>";}
+
+function mcpPrompt(p){
+  const text=sub(p);
+  const header="Use the cast-imaging MCP server for all tool calls.\n\n";
+  if(text.toLowerCase().includes("cast imaging mcp")||text.toLowerCase().includes("cast-imaging")){return text;}
+  return header+text;
+}
+
+function renderSB(){
+  const counts={};P.forEach(p=>{counts[p.cat]=(counts[p.cat]||0)+1;});
+  const prodCounts={imaging:0,highlight:0,gatekeeper:0};
+  P.forEach(p=>{const pr=p.prod||"imaging";if(prodCounts[pr]!==undefined)prodCounts[pr]++;});
+
+  document.getElementById("sb").innerHTML=
+    CATS.map(c=>{
+      const cnt=c.id==="all"?P.length:(counts[c.id]||0);
+      return "<button class='cb"+(S.cat===c.id?" act":"")+"' onclick=\"selCat('"+c.id+"')\">"
+        +"<span class='ci' style='color:"+c.color+"'>"+c.icon+"</span>"
+        +"<span class='cl'>"+c.label+"</span>"
+        +"<span class='cc'>"+cnt+"</span></button>";
+    }).join("")
+    +"<div class='fs'><div class='ft'>CAST Products</div>"
+    +[["all","All Products",P.length],["imaging","Imaging",prodCounts.imaging],["highlight","Highlight",prodCounts.highlight],["gatekeeper","Gatekeeper",prodCounts.gatekeeper]].map(([v,l,n])=>
+      "<button class='fb"+(S.product===v?" act":"")+"' onclick=\"selProd('"+v+"')\">"
+      +"<span style='flex:1'>"+l+"</span>"
+      +"<span class='cc'>"+n+"</span>"
+      +"</button>"
+    ).join("")+"</div>"
+    +"<div class='fs'><div class='ft'>User Profile</div>"
+    +["all","Developer","Architect","Dev Manager"].map(pr=>
+      "<button class='fb"+(S.profile===pr?" act":"")+"' onclick=\"selProf('"+pr+"')\">"+(pr==="all"?"All Profiles":pr)+"</button>"
+    ).join("")+"</div>";
+}
+
+function renderCards(){
+  const list=filt();
+  document.getElementById("cnt").textContent=list.length;
+  const cg=document.getElementById("cg");
+  if(!list.length){
+    cg.innerHTML="<div class='emp'><div class='emp-i'>◎</div><div>No prompts match your filters</div></div>";
+    return;
+  }
+  cg.innerHTML=list.map(p=>{
+    const cat=CMAP[p.cat]||CMAP.all;
+    const hasChain=p.chain&&(p.chain.prev||p.chain.next);
+    return "<button class='card"+(S.sel&&S.sel.id===p.id?" sel":"")+"' onclick=\"selP('"+p.id+"')\">"
+      +"<div class='ch'><span class='cion' style='color:"+cat.color+"'>"+cat.icon+"</span>"
+      +"<div><div class='ct'>"+esc(p.title)+"</div>"
+      +"<div class='cc2' style='color:"+cat.color+"'>"+cat.label+"</div></div></div>"
+      +"<div class='cp'>"+esc(p.prompt.replace(/\n/g," ").substring(0,110))+"…</div>"
+      +"<div class='cf'>"
+      +bdg(p.complexity,"cplx-"+p.complexity)
+            +"</div></button>";
+  }).join("");
+}
+
+function renderPText(p){
+  return sub(p).split(/({{[^}]+}})/).map(part=>{
+    if(/^\{\{[^}]+\}\}$/.test(part))return "<span class='vh'>"+esc(part)+"</span>";
+    return esc(part);
+  }).join("");
+}
+
+function renderDet(){
+  const det=document.getElementById("det");
+  if(!S.sel){det.classList.remove("open");det.innerHTML="";return;}
+  det.classList.add("open");
+  const p=S.sel;
+  const prevP=p.chain&&p.chain.prev?PMAP[p.chain.prev]:null;
+  const nextP=p.chain&&p.chain.next?PMAP[p.chain.next]:null;
+  const hasVars=(p.vars||[]).length>0;
+  const allFilled=!hasVars||(p.vars||[]).every(v=>S.vars[v.name]&&S.vars[v.name].trim());
+
+  det.innerHTML=
+    "<div class='dh'>"
+    +"<div style='flex:1'>"
+    +"<div class='dt'>"+esc(p.title)+"</div>"
+    +"<div style='display:flex;flex-wrap:wrap;gap:4px'>"
+    +bdg(p.complexity,"cplx-"+p.complexity)
+    +bdg(p.tier,"tier-"+p.tier)
+    +p.profile.map(pr=>"<span class='bdg' style='background:"+PC[pr]+"15;color:"+PC[pr]+"'>"+pr+"</span>").join("")
+    +"</div></div>"
+    +"<button class='dc' onclick='closeDet()'>×</button></div>"
+
+    +(prevP||nextP?
+      "<div class='chb'><span class='chl'>⛓ CHAIN</span>"
+      +(prevP?"<button class='chbtn' onclick=\"selP('"+prevP.id+"')\">← "+esc(prevP.title)+"</button>":"")
+      +(nextP?"<button class='chbtn' style='margin-left:auto' onclick=\"selP('"+nextP.id+"')\">"+esc(nextP.title)+" →</button>":"")
+      +"</div>":"")
+
+    +(hasVars?
+      "<div class='vs'>"
+      +"<div class='stl'>Fill in the variables</div>"
+      +p.vars.map(v=>
+        "<label class='vl'>"+esc(v.name)+" <span class='vd'>— "+esc(v.desc)+"</span></label>"
+        +"<input class='vi' placeholder='e.g. "+esc(v.ex)+"'"
+        +" value='"+(S.vars[v.name]||"").replace(/'/g,"&#39;")+"'"
+        +" oninput=\"setVar('"+v.name+"',this.value)\">"
+      ).join("")
+      +"</div>":"")
+
+    +"<div class='ps'>"
+    +"<div class='stl'>Prompt</div>"
+    +"<div class='pb' id='ptxt'>"+renderPText(p)+"</div>"
+    +(p.expected?
+      "<div class='eb'><div class='et'>Expected Output</div><div class='ev'>"+esc(p.expected)+"</div></div>":""
+    )
+    +"<div class='tr'>"+(p.tags||[]).map(t=>"<span class='tg'>"+esc(t)+"</span>").join("")+"</div>"
+    +"</div>"
+
+    +"<div class='act-area'>"
+    +(hasVars&&!allFilled
+      ?"<button class='btn-copy' id='bcopy' style='opacity:.45;cursor:default'>Fill variables above to copy</button>"
+      :"<button class='btn-copy' id='bcopy' onclick='doCopy()'>Copy Prompt</button>"
+    )
+    +"<div class='copy-note'>Paste into VS Code Copilot Chat · CAST Imaging MCP will be used automatically</div>"
+    +"</div>";
+}
+
+function render(){renderSB();renderCards();renderDet();}
+
+function selCat(id){S.cat=id;renderSB();renderCards();}
+function selProf(p){S.profile=p;renderSB();renderCards();}
+function selProd(v){S.product=v;renderSB();renderCards();}
+function selP(id){S.sel=PMAP[id];S.vars={};renderCards();renderDet();}
+function closeDet(){S.sel=null;renderCards();renderDet();}
+function setVar(name,val){
+  S.vars[name]=val;
+  // Update only prompt text — no full re-render so focus stays in the input
+  const ptxt=document.getElementById("ptxt");
+  if(ptxt)ptxt.innerHTML=renderPText(S.sel);
+  // Update copy button state without rebuilding the panel
+  const p=S.sel;
+  const hasVars=(p.vars||[]).length>0;
+  const allFilled=!hasVars||(p.vars||[]).every(v=>S.vars[v.name]&&S.vars[v.name].trim());
+  const btn=document.getElementById("bcopy");
+  if(btn){
+    if(hasVars&&!allFilled){
+      btn.textContent="Fill variables above to copy";
+      btn.style.opacity=".45";btn.style.cursor="default";
+      btn.onclick=null;
+    } else {
+      btn.textContent="Copy Prompt";
+      btn.style.opacity="1";btn.style.cursor="pointer";
+      btn.onclick=doCopy;
+    }
+  }
+}
+
+function doCopy(){
+  if(!S.sel)return;
+  navigator.clipboard.writeText(mcpPrompt(S.sel)).then(()=>{
+    const b=document.getElementById("bcopy");
+    if(b){b.textContent="✓ Copied!";b.classList.add("done");}
+    setTimeout(()=>{const b=document.getElementById("bcopy");if(b){b.textContent="Copy Prompt";b.classList.remove("done");}},2000);
+  });
+}
+
+document.getElementById("sq").addEventListener("input",function(){S.query=this.value;renderCards();});
+render();
+</script>
+</body>
+</html>
