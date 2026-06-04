@@ -3,93 +3,190 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>CAST Imaging — Prompt Library</title>
+<title>CAST Prompt Library for MCP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 :root{
-  --bg:#07101d;--surf:#0c1725;--surf2:#121f32;
-  --bdr:#1a2d45;--bdr2:#223850;
-  --acc:#f97316;--acc-dim:rgba(249,115,22,.1);
-  --txt:#d8eaf8;--mut:#5f7a96;--dim:#354e68;
+  --bg:#1b2333;--surf:#222d42;--surf2:#28364e;
+  --bdr:#334560;--bdr2:#3d5478;
+  --acc:#f97316;--acc-dim:rgba(249,115,22,.15);
+  --txt:#eaf2fc;--mut:#b8d4ee;--dim:#7ca8cc;
   --green:#34d399;--blue:#60a5fa;--purple:#a78bfa;
-  --yellow:#fbbf24;--rose:#fb7185;--sky:#38bdf8;--red:#f43f5e;
+  --yellow:#fbbf24;--rose:#fb7185;--red:#f43f5e;
 }
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);display:flex;flex-direction:column;font-size:14px;line-height:1.5}
-button,input{font-family:inherit}
-::-webkit-scrollbar{width:5px;height:5px}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--txt);display:flex;flex-direction:column;font-size:14px;line-height:1.5}
+button,input{font-family:inherit;cursor:pointer}
+input{cursor:text}
+::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:3px}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:2px}
 
-/* Header */
-#hdr{display:flex;align-items:center;gap:16px;padding:10px 18px;background:var(--surf);border-bottom:1px solid var(--bdr);flex-shrink:0}
+/* ── Header ── */
+#hdr{
+  display:flex;align-items:center;gap:16px;
+  padding:9px 18px;
+  background:#171f30;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  flex-shrink:0;
+}
 .brand{display:flex;align-items:center;gap:10px}
-.logo{width:30px;height:30px;background:linear-gradient(135deg,#f97316,#dc5b0a);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
-.brand-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;line-height:1.2}
-.brand-sub{font-size:10px;color:var(--mut);font-weight:500;letter-spacing:.03em}
-#sw{flex:1;max-width:480px;margin:0 auto}
-#sq{width:100%;background:var(--surf2);border:1px solid var(--bdr);border-radius:7px;padding:7px 13px;color:var(--txt);font-size:12px;outline:none}
-#sq:focus{border-color:var(--acc)}
-#sq::placeholder{color:var(--mut)}
-.hc{font-size:11px;color:#7aa2c4;white-space:nowrap}
 
-/* Layout */
+.brand-name{font-family:"Syne",sans-serif;font-weight:500;font-size:11px;color:#90b8d8;letter-spacing:.04em;text-transform:uppercase}
+#sw{flex:1;max-width:460px;margin:0 auto}
+#sq{
+  width:100%;background:#1e2a3e;border:1.5px solid rgba(255,255,255,.12);
+  border-radius:8px;padding:8px 14px;color:#ddeaf8;font-size:12px;outline:none;
+  box-shadow:inset 0 1px 3px rgba(0,0,0,.3);
+}
+#sq:focus{border-color:var(--acc);background:#243450;box-shadow:0 0 0 2px rgba(249,115,22,.2)}
+#sq::placeholder{color:#5888a8;font-size:11px}
+.hc{font-size:11px;color:#a0c8e4;white-space:nowrap;font-weight:500}
+
+/* ── Body ── */
 #body{display:flex;flex:1;overflow:hidden;min-height:0}
 
-/* Sidebar */
-#sb{width:210px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--bdr);overflow-y:auto;padding:8px 0 16px}
-.cb{width:100%;display:flex;align-items:center;gap:8px;padding:8px 14px;background:transparent;border:none;border-left:2px solid transparent;color:#7aa2c4;text-align:left;font-size:11px;font-weight:400;cursor:pointer;transition:all .12s}
-.cb:hover{background:rgba(255,255,255,.04);color:#d8eaf8}
-.cb.act{background:var(--acc-dim);border-left-color:var(--acc);color:var(--txt);font-weight:600}
-.ci{font-size:13px;flex-shrink:0}.cl{flex:1}
-.cc{font-size:9px;color:#5f7a96;background:#0d1e30;border-radius:9px;padding:1px 5px}
-.fs{margin:14px 14px 8px;border-top:1px solid #1e3450;padding-top:12px}
-.ft{font-size:9px;color:#7aa2c4;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
-.fb{display:flex;align-items:center;width:100%;text-align:left;padding:5px 8px;border-radius:5px;background:transparent;border:1px solid transparent;color:#7aa2c4;font-size:11px;margin-bottom:2px;cursor:pointer;transition:all .12s}
-.fb:hover{background:rgba(255,255,255,.04);color:#b0cce6}
-.fb.act{background:var(--acc-dim);border-color:rgba(249,115,22,.3);color:var(--txt);font-weight:500}
+/* ── Sidebar ── */
+#sb{
+  width:232px;flex-shrink:0;
+  background:#171f30;
+  border-right:1px solid rgba(255,255,255,.08);
+  overflow-y:auto;
+  padding:8px 0 20px;
+}
 
-/* Card grid */
+/* UC sections */
+.sb-section-title{
+  font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:#d0e8f8;padding:14px 14px 6px;
+  font-family:"Syne",sans-serif;
+}
+.uc-all{
+  width:100%;display:flex;align-items:center;gap:8px;
+  padding:7px 12px;background:transparent;
+  border:none;border-left:2px solid transparent;
+  color:#c8e4f8;font-size:10px;font-weight:500;text-align:left;
+  transition:all .12s;
+}
+.uc-all:hover{background:rgba(255,255,255,.06);color:#e4f0fc}
+.uc-all.act{border-left-color:var(--acc);background:var(--acc-dim);color:var(--txt);font-weight:600}
+.uc-btn{
+  width:100%;display:flex;align-items:center;gap:7px;
+  padding:7px 12px;background:transparent;
+  border:none;border-left:2px solid transparent;
+  color:#cce4f8;font-size:10px;font-weight:600;text-align:left;
+  transition:all .12s;
+}
+.uc-btn:hover{background:rgba(255,255,255,.08);color:#eef6ff}
+.uc-btn.act{border-left-color:var(--acc);background:var(--acc-dim);color:var(--txt);font-weight:600}
+
+.uc-lbl{flex:1;line-height:1.3;text-align:left}
+.uc-arr{font-size:8px;color:#6090b0;margin-left:2px;transition:transform .15s}
+.sub-btn{
+  width:100%;display:flex;align-items:center;gap:6px;
+  padding:5px 12px 5px 37px;background:transparent;
+  border:none;border-left:2px solid transparent;
+  color:#a8cce4;font-size:10px;text-align:left;
+  transition:all .12s;
+}
+.sub-btn:hover{background:rgba(255,255,255,.08);color:#cce4f8}
+.sub-btn.act{border-left-color:var(--acc);color:var(--txt);font-weight:600;background:rgba(249,115,22,.06)}
+.sub-dot{width:4px;height:4px;border-radius:50%;background:var(--bdr2);flex-shrink:0}
+.sub-btn.act .sub-dot{background:var(--acc)}
+.cc{
+  font-size:8px;color:#90bcd8;
+  background:#28384e;border:1px solid #3a5470;border-radius:8px;
+  padding:1px 6px;margin-left:auto;flex-shrink:0;
+}
+
+/* filter pills */
+.filter-section{padding:6px 0}
+.fb{
+  display:flex;align-items:center;width:100%;text-align:left;
+  padding:5px 12px;border-radius:0;background:transparent;
+  border:none;border-left:2px solid transparent;
+  color:#c0d8f0;font-size:10px;margin-bottom:1px;transition:all .12s;
+}
+.fb:hover{background:rgba(255,255,255,.08);color:#e4f2fc}
+.fb.act{background:var(--acc-dim);border-left-color:var(--acc);color:var(--txt);font-weight:500}
+.sb-divider{margin:10px 14px;border:none;border-top:1px solid #2a3a52}
+
+/* ── Card grid ── */
 #mn{flex:1;overflow-y:auto;padding:14px;min-width:0}
 #cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
-.card{background:var(--surf);border:1px solid var(--bdr);border-radius:9px;padding:13px;text-align:left;color:var(--txt);cursor:pointer;transition:border-color .15s,box-shadow .15s;width:100%}
-.card:hover{border-color:var(--bdr2);box-shadow:0 2px 12px rgba(0,0,0,.3)}
-.card.sel{border-color:var(--acc);background:var(--surf2);box-shadow:0 0 0 1px rgba(249,115,22,.25)}
-.ch{display:flex;align-items:flex-start;gap:8px;margin-bottom:9px}
-.cion{font-size:16px;margin-top:1px;flex-shrink:0}
-.ct{font-size:12px;font-weight:600;line-height:1.3;margin-bottom:3px}
-.cc2{font-size:9px;font-weight:500}
-.cp{font-size:10px;color:#6a8aaa;line-height:1.5;margin-bottom:9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.cf{display:flex;flex-wrap:wrap;gap:4px}
-.bdg{font-size:8px;font-weight:700;letter-spacing:.04em;padding:2px 6px;border-radius:4px;text-transform:uppercase}
-.cplx-Simple{background:rgba(52,211,153,.1);color:var(--green)}
-.cplx-Intermediate{background:rgba(251,191,36,.1);color:var(--yellow)}
-.cplx-Advanced{background:rgba(249,115,22,.1);color:var(--acc)}
-.emp{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--mut)}
-.emp-i{font-size:36px;margin-bottom:12px}
 
-/* Detail panel */
+.card{
+  background:#222d42;border:1px solid #2e4060;
+  border-radius:10px;padding:13px;
+  text-align:left;color:var(--txt);
+  transition:border-color .15s,box-shadow .15s,transform .1s;
+  width:100%;position:relative;overflow:hidden;
+}
+.card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  transition:background .15s;
+}
+.card:hover{border-color:#4a6890;box-shadow:0 4px 20px rgba(0,0,0,.3);transform:translateY(-1px)}
+.card.sel{border-color:var(--acc);background:var(--surf2);box-shadow:0 0 0 1px rgba(249,115,22,.2)}
+.card.sel::before{background:var(--acc)}
+
+.card-top{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
+
+.card-info{flex:1;min-width:0}
+.card-title{font-size:12px;font-weight:600;line-height:1.35;margin-bottom:2px}
+.card-sub{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:9px;font-weight:700;letter-spacing:.04em;
+  padding:3px 9px;border-radius:10px;margin-top:3px;
+  opacity:1;font-family:"Syne",sans-serif;
+}
+.card-preview{font-size:10px;color:#8aaccc;line-height:1.55;margin-bottom:9px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-foot{display:flex;flex-wrap:wrap;gap:4px}
+.bdg{font-size:8px;font-weight:700;letter-spacing:.04em;padding:2px 6px;border-radius:4px;text-transform:uppercase}
+.cplx-Simple{background:rgba(52,211,153,.12);color:#34d399}
+.cplx-Intermediate{background:rgba(251,191,36,.12);color:#fbbf24}
+.cplx-Advanced{background:rgba(249,115,22,.12);color:#f97316}
+
+.emp{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--mut)}
+.emp-i{font-size:32px;margin-bottom:10px}
+
+/* ── Detail panel ── */
 #det{width:0;overflow:hidden;flex-shrink:0;background:var(--surf);border-left:1px solid var(--bdr);display:flex;flex-direction:column;transition:width .2s ease}
 #det.open{width:420px}
+
 .dh{padding:13px 15px;border-bottom:1px solid var(--bdr);display:flex;align-items:flex-start;gap:10px;flex-shrink:0}
-.dt{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;line-height:1.3;margin-bottom:6px}
-.dc{background:none;border:none;color:var(--mut);font-size:20px;line-height:1;padding:0;margin-left:auto;flex-shrink:0;cursor:pointer}
+
+.dt{font-family:"Syne",sans-serif;font-weight:700;font-size:13px;line-height:1.3;margin-bottom:6px}
+.dc{background:none;border:none;color:var(--mut);font-size:20px;line-height:1;padding:0;margin-left:auto;flex-shrink:0}
 .dc:hover{color:var(--txt)}
+
 .chb{padding:8px 15px;border-bottom:1px solid var(--bdr);background:rgba(249,115,22,.04);display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0}
-.chl{font-size:9px;font-weight:700;color:var(--acc);letter-spacing:.08em}
-.chbtn{font-size:10px;color:var(--mut);background:var(--surf2);border:1px solid var(--bdr);border-radius:5px;padding:3px 9px;cursor:pointer}
+
+.chbtn{font-size:10px;color:var(--mut);background:#28364e;border:1px solid var(--bdr);border-radius:5px;padding:3px 9px}
 .chbtn:hover{border-color:var(--acc);color:var(--acc)}
+
 .vs{padding:12px 15px;border-bottom:1px solid var(--bdr);flex-shrink:0}
-.stl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7aa2c4;margin-bottom:6px}
+.stl{font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#7aa2c4;margin-bottom:7px}
 .vl{font-size:11px;color:#b0cce6;display:block;margin-bottom:4px;font-weight:600}
 .vd{color:#7aa2c4;font-weight:400}
-.vi{width:100%;background:#0d1e30;border:1px solid #2a4a6a;border-radius:5px;padding:8px 11px;color:#e8f4ff;font-size:12px;outline:none;font-family:'DM Sans',sans-serif;margin-bottom:8px}
+.vi{
+  width:100%;background:#0d1e30;border:1px solid #2a4a6a;
+  border-radius:5px;padding:8px 11px;color:#e8f4ff;
+  font-size:12px;outline:none;font-family:"DM Sans",sans-serif;margin-bottom:8px;
+}
 .vi:focus{border-color:var(--acc);background:#0f2235}
 .vi::placeholder{color:#4d7a9e}
+
 .ps{padding:12px 15px;flex:1;overflow-y:auto;min-height:0}
-.pb{background:var(--surf2);border:1px solid var(--bdr);border-radius:7px;padding:13px;font-size:11px;line-height:1.8;font-family:'JetBrains Mono',monospace;color:var(--txt);white-space:pre-wrap;word-break:break-word}
+.pb{
+  background:#28364e;border:1px solid var(--bdr);
+  border-radius:7px;padding:13px;
+  font-size:11px;line-height:1.8;
+  font-family:"JetBrains Mono",monospace;
+  color:var(--txt);white-space:pre-wrap;word-break:break-word;
+}
 .vh{color:var(--acc);background:rgba(249,115,22,.1);border-radius:3px;padding:0 2px}
 .eb{margin-top:10px;padding:9px 11px;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.15);border-radius:7px}
 .et{font-size:8px;color:var(--green);font-weight:700;letter-spacing:.1em;margin-bottom:3px}
@@ -97,13 +194,12 @@ button,input{font-family:inherit}
 .tr{margin-top:10px;display:flex;flex-wrap:wrap;gap:4px}
 .tg{font-size:8px;padding:2px 6px;border-radius:9px;background:var(--surf2);border:1px solid var(--bdr2);color:#5f7a96}
 
-/* Actions */
 .act-area{padding:12px 15px;border-top:1px solid var(--bdr);flex-shrink:0}
 .btn-copy{
   width:100%;padding:11px 0;border-radius:8px;
-  font-size:12px;font-weight:600;cursor:pointer;
+  font-size:12px;font-weight:600;
   background:rgba(249,115,22,.15);border:1px solid var(--acc);color:var(--acc);
-  transition:all .15s;letter-spacing:.02em;
+  transition:all .15s;
 }
 .btn-copy:hover{background:rgba(249,115,22,.25)}
 .btn-copy.done{background:rgba(52,211,153,.15);border-color:var(--green);color:var(--green)}
@@ -111,42 +207,101 @@ button,input{font-family:inherit}
 </style>
 </head>
 <body>
+
 <div id="hdr">
   <div class="brand">
-    <div class="logo">⬡</div>
-    <div>
-      <div class="brand-name">CAST Prompt Library for MCP</div>
+    <svg width="120" height="32" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+      <!-- Orange CAST icon mark -->
+      <path d="M6 8 L6 24 L14 28 L20 24 L20 19 L15 22 L11 20 L11 12 L15 10 L20 13 L20 8 L14 4 Z" fill="#f97316"/>
+      <rect x="22" y="14" width="8" height="4" rx="1" fill="#f97316" opacity="0.5"/>
+      <!-- CAST text -->
+      <text x="32" y="22" font-family="Syne,sans-serif" font-weight="800" font-size="17" fill="#ffffff" letter-spacing="2">CAST</text>
+    </svg>
+    <div style="border-left:1px solid rgba(255,255,255,.12);padding-left:10px;margin-left:4px">
+      <div class="brand-name">Prompt Library for MCP</div>
     </div>
   </div>
   <div id="sw"><input type="text" id="sq" placeholder="Search prompts, tags, use cases…"></div>
   <div class="hc"><span id="cnt">0</span> prompts</div>
 </div>
+
 <div id="body">
   <div id="sb"></div>
   <div id="mn"><div id="cg"></div></div>
   <div id="det"></div>
 </div>
+
 <script>
-const CATS=[
-  {id:"all",label:"All Prompts",icon:"◈",color:"#6b82a0"},
-  {id:"discovery",label:"App Discovery",icon:"⬡",color:"#60a5fa"},
-  {id:"quality",label:"Code Quality & Tech Debt",icon:"◈",color:"#fbbf24"},
-  {id:"impact",label:"Impact Analysis",icon:"◎",color:"#f97316"},
-  {id:"docs",label:"Documentation & Biz Rules",icon:"▣",color:"#a78bfa"},
-  {id:"arch",label:"Architecture Analysis",icon:"◫",color:"#34d399"},
-  {id:"modern",label:"Modernization & Cloud",icon:"△",color:"#38bdf8"},
-  {id:"onboard",label:"Legacy Onboarding",icon:"◇",color:"#fb7185"},
-  {id:"security",label:"Security & OSS",icon:"⬟",color:"#f43f5e"},
+
+// SVG icons per use case — colored, no circle background
+const UC_ICONS={
+  1:'<rect x="1" y="13" width="5" height="8" rx="1" fill="currentColor"/><rect x="9" y="8" width="5" height="13" rx="1" fill="currentColor"/><rect x="17" y="3" width="5" height="18" rx="1" fill="currentColor"/>',
+  2:'<path d="M12 2L3 6.5v5.5c0 5.5 3.9 10.7 9 12 5.1-1.3 9-6.5 9-12V6.5L12 2z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+  3:'<path d="M13 19V7.83l4.88 4.88a1 1 0 001.42-1.42l-6.59-6.59a1 1 0 00-1.42 0L4.71 11.3a1 1 0 101.42 1.42L11 7.83V19a1 1 0 002 0z" fill="currentColor"/>',
+  4:'<path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+  5:'<path d="M12 2.5C8 7 7 11 7 14.5A5 5 0 0012 19.5a5 5 0 005-5C17 11 16 7 12 2.5z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="12" cy="14" r="2.2" fill="currentColor"/><path d="M8.5 20C7 21.5 4.5 21.5 3.5 20.5S3 17.5 4.5 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/><path d="M15.5 20C17 21.5 19.5 21.5 20.5 20.5S21 17.5 19.5 16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/>',
+  6:'<rect x="4" y="2" width="16" height="20" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="8" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
+};
+
+function ucIcon(ucId,color,size){
+  const s=size||38, pad=Math.round(s*0.08);
+  const icon=UC_ICONS[ucId]||UC_ICONS[1];
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 '+s+' '+s+'" color="'+color+'" style="flex-shrink:0">'
+    +'<g transform="translate('+pad+','+pad+') scale('+(s-pad*2)+'/24)">'
+    +icon
+    +'</g>'
+    +'</svg>';
+}
+
+// ── USE CASE DEFINITIONS ─────────────────────────────────────────────
+const UCS=[
+  {id:1,label:"Tech Debt Reduction",color:"#d63b3b",
+   subs:[{key:"debt-id",label:"Debt Identification & Scoring"},{key:"remediation",label:"Automated Remediation"}]},
+  {id:2,label:"Risk Reduction",color:"#e07838",
+   subs:[{key:"oss-cve",label:"OSS & CVE Vulnerability"},{key:"arch-integrity",label:"Architectural Integrity"}]},
+  {id:3,label:"Technology Upgrades",color:"#d4a018",
+   subs:[{key:"framework",label:"Framework & Runtime Upgrades"},{key:"db-migration",label:"Database Migration"}]},
+  {id:4,label:"App Maintenance & Enhancement",color:"#2da854",
+   subs:[{key:"discovery",label:"Application Discovery"},{key:"impact",label:"Impact Analysis"},{key:"onboarding",label:"Developer Onboarding"}]},
+  {id:5,label:"Modernization Acceleration",color:"#15a898",
+   subs:[{key:"architecture",label:"Architecture Analysis"},{key:"micro-cloud",label:"Microservices & Cloud"},{key:"mainframe",label:"Mainframe Modernization"}]},
+  {id:6,label:"Business Rule Extraction",color:"#1a7fd4",
+   subs:[{key:"api-docs",label:"API & Code Documentation"},{key:"biz-rules",label:"Business Rules & Workflows"}]},
 ];
-const CMAP=Object.fromEntries(CATS.map(c=>[c.id,c]));
+const UC_MAP={
+  q1:{uc:1,sub:"debt-id"},q2:{uc:1,sub:"remediation"},q3:{uc:1,sub:"debt-id"},
+  q4:{uc:1,sub:"debt-id"},q5:{uc:1,sub:"debt-id"},q6:{uc:1,sub:"remediation"},
+  q7:{uc:1,sub:"debt-id"},q8:{uc:1,sub:"debt-id"},q9:{uc:1,sub:"debt-id"},
+  q10:{uc:1,sub:"debt-id"},q11:{uc:1,sub:"remediation"},q12:{uc:1,sub:"debt-id"},
+  h1:{uc:1,sub:"debt-id"},h4:{uc:1,sub:"remediation"},h8:{uc:1,sub:"debt-id"},
+  s1:{uc:2,sub:"oss-cve"},s2:{uc:2,sub:"oss-cve"},
+  h2:{uc:2,sub:"oss-cve"},h3:{uc:2,sub:"oss-cve"},h7:{uc:2,sub:"oss-cve"},h9:{uc:2,sub:"oss-cve"},
+  a4:{uc:2,sub:"arch-integrity"},i4:{uc:2,sub:"arch-integrity"},
+  h5:{uc:3,sub:"framework"},m2:{uc:3,sub:"framework"},m6:{uc:3,sub:"framework"},
+  m4:{uc:3,sub:"db-migration"},m7:{uc:5,sub:"mainframe"},
+  d1:{uc:4,sub:"discovery"},d2:{uc:4,sub:"discovery"},d3:{uc:4,sub:"discovery"},d4:{uc:4,sub:"discovery"},
+  i1:{uc:4,sub:"impact"},i2:{uc:4,sub:"impact"},i3:{uc:4,sub:"impact"},
+  i5:{uc:4,sub:"impact"},i6:{uc:4,sub:"impact"},i7:{uc:4,sub:"impact"},i8:{uc:4,sub:"impact"},
+  o1:{uc:4,sub:"onboarding"},o2:{uc:4,sub:"onboarding"},o3:{uc:4,sub:"onboarding"},o4:{uc:4,sub:"onboarding"},
+  a1:{uc:5,sub:"architecture"},a2:{uc:5,sub:"architecture"},a3:{uc:5,sub:"architecture"},a5:{uc:5,sub:"architecture"},
+  a6:{uc:5,sub:"micro-cloud"},m1:{uc:5,sub:"micro-cloud"},m3:{uc:5,sub:"micro-cloud"},
+  m5:{uc:5,sub:"mainframe"},
+  doc1:{uc:6,sub:"api-docs"},doc2:{uc:6,sub:"biz-rules"},doc3:{uc:6,sub:"api-docs"},
+  doc4:{uc:6,sub:"biz-rules"},doc5:{uc:6,sub:"biz-rules"},doc6:{uc:6,sub:"api-docs"},
+  o5:{uc:6,sub:"biz-rules"},o6:{uc:6,sub:"biz-rules"},
+};
+
+// Profile colors (including new personas)
+const PC={
+  Developer:"#34d399",Architect:"#60a5fa","Dev Manager":"#fb7185","CIO":"#fbbf24","Project Manager":"#a78bfa","Cyber Team":"#f43f5e"
+};
 const CC={Simple:"#34d399",Intermediate:"#fbbf24",Advanced:"#f97316"};
-const TC={starter:"#60a5fa",power:"#a78bfa"};
-const PC={Developer:"#34d399",Architect:"#60a5fa","Dev Manager":"#fb7185"};
+
 const P=[
-{id:"d1",cat:"discovery",title:"List All Applications",profile:["Architect","Dev Manager","Developer"],complexity:"Simple",tier:"starter",vars:[],chain:{},tags:["inventory","portfolio"],prompt:"Get the application list from CAST Imaging MCP server. For each application, list its name, basic information, and available stats."},
-{id:"d2",cat:"discovery",title:"Portfolio Overview & Dependencies",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[],chain:{},tags:["portfolio","planning","dependencies"],prompt:"List all applications available in CAST Imaging. For each application, retrieve its stats including size, complexity metrics, and technology breakdown. Then fetch inter-application dependencies to identify coupling between apps. Finally, retrieve the external packages used by each application.\n\nProduce a consolidated portfolio overview report in markdown with:\n- Application inventory table (name, size, tech stack, complexity)\n- Dependency heat map (which apps are most coupled)\n- Technology landscape summary\n- Modernization priority score based on tech debt + dependencies"},
+{id:"d1",cat:"discovery",title:"List All Applications",profile:["Architect","Dev Manager","CIO","Developer"],complexity:"Simple",tier:"starter",vars:[],chain:{},tags:["inventory","portfolio"],prompt:"Get the application list from CAST Imaging MCP server. For each application, list its name, basic information, and available stats."},
+{id:"d2",cat:"discovery",title:"Portfolio Overview & Dependencies",profile:["Architect","Dev Manager","Cyber Team"],complexity:"Advanced",tier:"power",vars:[],chain:{},tags:["portfolio","planning","dependencies"],prompt:"List all applications available in CAST Imaging. For each application, retrieve its stats including size, complexity metrics, and technology breakdown. Then fetch inter-application dependencies to identify coupling between apps. Finally, retrieve the external packages used by each application.\n\nProduce a consolidated portfolio overview report in markdown with:\n- Application inventory table (name, size, tech stack, complexity)\n- Dependency heat map (which apps are most coupled)\n- Technology landscape summary\n- Modernization priority score based on tech debt + dependencies"},
 {id:"d3",cat:"discovery",title:"Transaction Inventory Count",profile:["Developer","Architect"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{next:"a1"},tags:["inventory","transactions"],prompt:"How many transactions are there in the {{APP_NAME}} application? List all transaction names and types.",expected:"Full list of all transactions with total count"},
-{id:"d4",cat:"discovery",title:"App High-Level Summary",profile:["Architect","Dev Manager"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"}],chain:{},tags:["discovery","summary"],prompt:"Summarize the high-level functionality of the {{APP_NAME}} application including inter-app dependencies using CAST Imaging MCP Server. Save the output as {{APP_NAME}}-App-Summary.md"},
+{id:"d4",cat:"discovery",title:"App High-Level Summary",profile:["Architect","Dev Manager","Cyber Team"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"}],chain:{},tags:["discovery","summary"],prompt:"Summarize the high-level functionality of the {{APP_NAME}} application including inter-app dependencies using CAST Imaging MCP Server. Save the output as {{APP_NAME}}-App-Summary.md"},
 {id:"q1",cat:"quality",title:"Deprecated Methods Inventory",profile:["Developer","Architect"],complexity:"Simple",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{next:"q2"},tags:["tech-debt","deprecated"],prompt:"Can you please list all the deprecated methods in the {{APP_NAME}} application? Please provide the full signature of each method and don't aggregate methods with the same name.",expected:"35 deprecated methods"},
 {id:"q2",cat:"quality",title:"Deprecated Methods + API Endpoint Usage",profile:["Developer","Architect"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{prev:"q1"},tags:["tech-debt","deprecated","api-endpoints"],prompt:"Can you please list all the deprecated methods in the {{APP_NAME}} application including the third party library methods and check if they are called by API endpoints? Please provide the full signature of each method and don't aggregate methods with the same name, list each single method.",expected:"15 unused + 20 used deprecated methods"},
 {id:"q3",cat:"quality",title:"Full ISO 5055 Compliance Analysis",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"}],chain:{},tags:["iso-5055","quality","compliance","security"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nObjective: For application APP_NAME, perform a full ISO 5055 compliance analysis:\n\nStep 1 — Use application_iso_5055_explorer to list all ISO 5055 characteristics and their associated weaknesses.\nStep 2 — Retrieve quality insights filtered to iso-5055 violations. For each characteristic (Reliability, Security, Performance, Maintainability), get violation counts.\nStep 3 — For the top 3 worst-performing characteristics, retrieve individual violations with object names and locations.\nStep 4 — Cross-reference with CVE data to identify if security weaknesses overlap with ISO 5055 security violations.\n\nOutput: A structured ISO 5055 compliance report with scores per characteristic, top violations by severity, and a risk remediation priority list."},
@@ -154,7 +309,7 @@ const P=[
 {id:"q5",cat:"quality",title:"Tech Debt Finding — Locate in Code",profile:["Developer"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"},{name:"FINDING_NAME",desc:"Exact name of the tech debt finding",ex:"Avoid using binary data type in mainframes"}],chain:{next:"q6"},tags:["tech-debt","findings"],prompt:"For the technical debt finding \"{{FINDING_NAME}}\", list the findings and where they are used in the {{APP_NAME}} code. Create a markdown file with all instances, their locations, and remediation suggestions."},
 {id:"q6",cat:"quality",title:"Tech Debt — Remediation with Code Fix",profile:["Developer"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"},{name:"FINDING_NAME",desc:"Tech debt finding name",ex:"Validation Error – Employee Number Zero"}],chain:{prev:"q5"},tags:["tech-debt","remediation","code-fix"],prompt:"For tech debt finding \"{{FINDING_NAME}}\" in the {{APP_NAME}} application, provide:\n1. Full impact analysis — which objects are affected and how they are used\n2. Remediation code — updated code suitable for implementation in VS Code\n3. Developer review notes explaining the fix rationale\nSave the complete output as a markdown file."},
 {id:"q7",cat:"quality",title:"Most Critical Structural Flaws",profile:["Architect"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["structural-flaws","quality"],prompt:"Where are the most critical structural flaws in the {{APP_NAME}} codebase that are actively hurting reliability, performance, and maintainability — and how severe are they?"},
-{id:"q8",cat:"quality",title:"Tech Debt Quantification",profile:["Dev Manager"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["tech-debt","metrics"],prompt:"How much technical debt does the {{APP_NAME}} application actually have — and which parts of the application are contributing most to it?"},
+{id:"q8",cat:"quality",title:"Tech Debt Quantification",profile:["Dev Manager","CIO"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["tech-debt","metrics"],prompt:"How much technical debt does the {{APP_NAME}} application actually have — and which parts of the application are contributing most to it?"},
 {id:"q9",cat:"quality",title:"Dead Code & Complexity Hotspots",profile:["Developer"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["dead-code","complexity"],prompt:"Which parts of the {{APP_NAME}} codebase are unreachable, unused, or so complex that no one wants to touch them?"},
 {id:"q10",cat:"quality",title:"Complex Transactions — Quality Overlay",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"}],chain:{},tags:["transactions","complexity","quality"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nFor application APP_NAME:\nStep 1 — List all transactions, sorted to identify the longest/most complex flows.\nStep 2 — For the top 10 transactions by node count, retrieve their complexity details and complexity_graph.\nStep 3 — Retrieve quality insights for objects within those transactions to identify which carry the highest technical debt.\n\nOutput: Transaction complexity leaderboard with quality debt overlay, identifying the highest-risk transaction paths for remediation."},
 {id:"q11",cat:"quality",title:"360° Modernization Readiness Assessment",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"},{name:"TECH_STACK",desc:"Technology stack e.g. Java, .NET",ex:"Java"}],chain:{},tags:["modernization","quality","cloud","assessment"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nObjective: For the {{TECH_STACK}} application APP_NAME:\n\nStep 1 — Retrieve application stats (size, complexity, technology profile).\nStep 2 — Retrieve structural flaw and ISO 5055 quality insights.\nStep 3 — List all available advisors (code improvement recommendations).\nStep 4 — For the top 10 most-violated advisor rules, get specific occurrences.\nStep 5 — Retrieve cloud readiness insights and migration blockers.\n\nOutput: A 360° modernization readiness assessment: quality baseline, technical debt inventory, advisor-driven refactoring backlog, and cloud migration risk profile."},
@@ -181,7 +336,7 @@ const P=[
 {id:"a6",cat:"arch",title:"Microservices Community Detection",profile:["Architect"],complexity:"Advanced",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["architecture","microservices","monolith"],prompt:"We want to break the {{APP_NAME}} monolith into microservices. Which functional communities exist in the codebase and which ones can realistically be extracted first?"},
 {id:"m1",cat:"modern",title:"Microservices Decomposition Plan",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"}],chain:{},tags:["modernization","microservices","decomposition","planning"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nFor monolithic application APP_NAME, identify microservices decomposition candidates:\n\nStep 1 — Retrieve the component-level architectural graph to see all major modules.\nStep 2 — List all transactions and map which components each transaction touches.\nStep 3 — Use quality insights to identify structural flaws that would complicate extraction.\nStep 4 — Analyze inter-component dependency density to find low-coupling clusters.\n\nOutput: A decomposition roadmap ranking extraction candidates by feasibility, with coupling scores, shared data object risks, and recommended extraction sequence."},
 {id:"m2",cat:"modern",title:"Cloud Migration Readiness (Windows App)",profile:["Dev Manager","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"}],chain:{},tags:["cloud","modernization","windows","migration"],prompt:"APP_NAME = '{{APP_NAME}}'\n\nFor the Windows application APP_NAME:\nStep 1 — Retrieve all cloud maturity quality insights and their violations.\nStep 2 — List all external packages and analyze package interactions to identify Windows-specific dependencies.\nStep 3 — Retrieve the architectural graph at layer level to identify hard-coded infrastructure assumptions.\nStep 4 — Retrieve cloud-related advisors and their occurrences.\n\nOutput: Cloud migration readiness report with blocker categories, affected object counts, remediation effort estimates, and a prioritized cloud-enablement backlog."},
-{id:"m3",cat:"modern",title:"Portfolio Modernization Business Case",profile:["Dev Manager","Architect"],complexity:"Advanced",tier:"power",vars:[],chain:{},tags:["modernization","portfolio","business-case","planning"],prompt:"Retrieve a full portfolio-level dataset for building a modernization business case:\n\nStep 1 — List all applications with their stats (size, complexity, technology).\nStep 2 — Get quality insights across all applications for structural-flaws, iso-5055, cve, and cloud patterns.\nStep 3 — Analyze inter-application dependencies to identify coupling risk.\nStep 4 — Retrieve benchmark data to compare applications against industry standards.\n\nOutput: Executive-ready modernization business case with application risk scores, total technical debt quantification, cloud readiness scores, and recommended modernization sequence with ROI rationale."},
+{id:"m3",cat:"modern",title:"Portfolio Modernization Business Case",profile:["Dev Manager","Architect","CIO","Project Manager"],complexity:"Advanced",tier:"power",vars:[],chain:{},tags:["modernization","portfolio","business-case","planning"],prompt:"Retrieve a full portfolio-level dataset for building a modernization business case:\n\nStep 1 — List all applications with their stats (size, complexity, technology).\nStep 2 — Get quality insights across all applications for structural-flaws, iso-5055, cve, and cloud patterns.\nStep 3 — Analyze inter-application dependencies to identify coupling risk.\nStep 4 — Retrieve benchmark data to compare applications against industry standards.\n\nOutput: Executive-ready modernization business case with application risk scores, total technical debt quantification, cloud readiness scores, and recommended modernization sequence with ROI rationale."},
 {id:"m4",cat:"modern",title:"Data Layer Analysis for DB Migration",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Demo"},{name:"SCHEMA_PREFIX",desc:"Database schema prefix to filter tables",ex:"CAST"}],chain:{},tags:["modernization","database","migration","data-layer"],prompt:"APP_NAME = '{{APP_NAME}}'\nSCHEMA_PREFIX = '{{SCHEMA_PREFIX}}'\n\nFor application APP_NAME, perform a complete data layer analysis:\n\nStep 1 — List all database tables. For tables matching SCHEMA_PREFIX, retrieve their columns.\nStep 2 — List all data call graphs and retrieve the full graph for the top 5 most complex ones.\nStep 3 — Identify objects that perform direct SQL (not via ORM) and flag as migration risk.\nStep 4 — Map data flows: which transactions read/write which tables.\n\nOutput: Database dependency map, migration risk assessment by table, and effort estimate for data layer modernization."},
 {id:"m5",cat:"modern",title:"Mainframe Rebuild Discovery Package",profile:["Architect","Dev Manager"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"VZ"}],chain:{},tags:["mainframe","rebuild","modernization","discovery"],prompt:"You are a software architecture and application discovery expert.\n\nAnalyze the {{APP_NAME}} mainframe application using CAST Imaging. Your goal is to produce a comprehensive application discovery and business functionality document to support rebuilding the system in Java or a modern platform.\n\nInclude:\n1. Application inventory (programs, transactions, data objects, size metrics)\n2. Business domain identification and functional grouping\n3. Transaction flow analysis for the top 20 most-used paths\n4. Data model and database interaction patterns\n5. Integration points (inbound/outbound interfaces)\n6. Technical debt and code quality risk areas\n7. Rebuild complexity estimate by domain"},
 {id:"m6",cat:"modern",title:"Cloud Migration Blockers (Specific Objects)",profile:["Dev Manager"],complexity:"Intermediate",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["cloud","migration","blockers","containers"],prompt:"What are the specific blockers stopping us from containerizing or moving {{APP_NAME}} to the cloud — show me the actual objects, not just categories of risk."},
@@ -199,107 +354,132 @@ const P=[
  tags:["tech-debt","benchmarking","portfolio","executive"],
  prompt:"Using the latest CAST Highlight data for the {{DOMAIN_NAME}} domain, give me an executive investment brief:\n- Rank the top 5 most technically indebted applications by their Software Health Factor score\n- Show each app\u2019s cloud readiness score and whether the trend is improving or degrading\n- Identify applications with a health score below 50 and quantify the remediation effort\n- Recommend where to prioritize investment this quarter based on risk vs effort ratio"},
 {id:"h2",cat:"security",prod:"highlight",title:"OSS License Risk Executive Dashboard",
- profile:["Dev Manager"],complexity:"Intermediate",tier:"starter",
+ profile:["Dev Manager","CIO"],complexity:"Intermediate",tier:"starter",
  vars:[{name:"DOMAIN_NAME",desc:"Your Highlight domain name",ex:"ACME Corp"}],chain:{},
  tags:["oss","compliance","license","portfolio"],
  prompt:"From the existing CAST Highlight analysis for the {{DOMAIN_NAME}} domain, produce an OSS license compliance report:\n- List all open-source licenses detected and classify each as Permissive, Weak Copyleft, Strong Copyleft, or Proprietary-Restricted\n- Identify applications with more than 3 high-risk licenses (GPL, AGPL, LGPL, or unknown)\n- Flag any license combinations that create legal conflicts within the same application\n- Summarize total OSS component count and the percentage that carries compliance risk"},
 {id:"h3",cat:"security",prod:"highlight",title:"OSS Third-Party Dependency Audit",
- profile:["Architect"],complexity:"Intermediate",tier:"power",
+ profile:["Architect","Cyber Team"],complexity:"Intermediate",tier:"power",
  vars:[{name:"APP_NAME",desc:"Application name in CAST Highlight",ex:"MyApp"}],chain:{},
  tags:["oss","vulnerability","cve","dependencies"],
  prompt:"Using the existing CAST Highlight analysis for {{APP_NAME}}, produce a full third-party dependency audit:\n- List all OSS components with their detected version, license type, and license risk level\n- Flag components with known CVEs, showing the CVE ID and CVSS score for each\n- Identify components that are outdated (a newer major version exists) or unmaintained\n- Group findings by risk level: Critical, High, Medium, Low\n- Provide a prioritized remediation list starting with the highest CVSS scores"},
 {id:"h4",cat:"quality",prod:"highlight",title:"Technical Debt Remediation Roadmap",
- profile:["Architect"],complexity:"Advanced",tier:"power",
+ profile:["Architect","Project Manager"],complexity:"Advanced",tier:"power",
  vars:[{name:"APP_NAME",desc:"Application name in CAST Highlight",ex:"MyApp"},{name:"TARGET_SCORE",desc:"Target software health score to reach",ex:"80"}],chain:{},
  tags:["tech-debt","recommendations","roadmap"],
  prompt:"Using the existing CAST Highlight data for {{APP_NAME}}, build a technical debt remediation roadmap:\n- Show the current Software Health Factor score broken down by the four pillars: Complexity, Duplication, Dependency Risk, and Volume\n- List the top 10 remediation recommendations ranked by effort-to-impact ratio\n- For each recommendation show the number of violations, estimated effort in days, and expected score improvement\n- Identify the minimum set of fixes needed to bring the overall health score above {{TARGET_SCORE}}\n- Flag any debt category trending worse since the previous Highlight snapshot"},
 {id:"h5",cat:"quality",prod:"highlight",title:"Technology & Framework Obsolescence Review",
- profile:["Architect"],complexity:"Intermediate",tier:"starter",
+ profile:["Architect","Project Manager","CIO"],complexity:"Intermediate",tier:"starter",
  vars:[{name:"DOMAIN_NAME",desc:"Your Highlight domain name",ex:"ACME Corp"}],chain:{},
  tags:["tech-debt","frameworks","obsolescence","modernization"],
  prompt:"From the existing CAST Highlight analysis for the {{DOMAIN_NAME}} domain, produce a technology obsolescence report:\n- List all frameworks, languages, and third-party technologies detected across the portfolio\n- Flag any technology that is end-of-life, past vendor end-of-support, or has had no major release in over 2 years\n- For each obsolete technology identify which applications are affected\n- Group affected applications by migration urgency: Immediate (EOL, no security patches), Medium-term (approaching EOL), Watch (stagnant community activity)\n- Recommend a migration priority sequence based on risk exposure and number of affected applications"},
 {id:"h7",cat:"security",prod:"highlight",title:"OSS Vulnerability Exposure Report",
- profile:["Developer"],complexity:"Intermediate",tier:"power",
+ profile:["Developer","Cyber Team"],complexity:"Intermediate",tier:"power",
  vars:[{name:"APP_NAME",desc:"Application name in CAST Highlight",ex:"MyApp"},{name:"CVSS_THRESHOLD",desc:"Minimum CVSS score to flag",ex:"7"}],chain:{},
  tags:["oss","vulnerability","cvss","security-gate"],
  prompt:"Using the latest CAST Highlight data for {{APP_NAME}}, produce an OSS vulnerability exposure report:\n- List all OSS components with known CVEs sorted by CVSS score descending\n- For each vulnerability show: CVE ID, CVSS score, affected component and version, and the fixed version if available\n- Flag any vulnerability with CVSS score \u2265 {{CVSS_THRESHOLD}} that has a fix available but has not yet been upgraded\n- Summarize total exposure: count of Critical, High, Medium, and Low CVEs\n- Give a clear go / no-go recommendation on whether the application is safe to release based on the threshold"},
 {id:"h8",cat:"quality",prod:"highlight",title:"Multi-App Tech Debt Comparison",
- profile:["Dev Manager"],complexity:"Intermediate",tier:"power",
+ profile:["Dev Manager","CIO"],complexity:"Intermediate",tier:"power",
  vars:[{name:"APP_1",desc:"First application name",ex:"App-A"},{name:"APP_2",desc:"Second application name",ex:"App-B"},{name:"APP_3",desc:"Third application name",ex:"App-C"}],chain:{},
  tags:["tech-debt","benchmarking","comparison","portfolio"],
  prompt:"Using the existing CAST Highlight data, compare the technical health of {{APP_1}}, {{APP_2}}, and {{APP_3}}:\n- Show each application\u2019s current Software Health Factor score and grade\n- Compare debt breakdown across the four pillars: Complexity, Duplication, Dependency Risk, and Volume\n- Identify which application has the highest OSS risk and summarize the key vulnerabilities\n- Rank the three applications by modernization urgency and explain the rationale\n- Flag any application where the health score has degraded compared to the previous Highlight snapshot"},
 {id:"h9",cat:"security",prod:"highlight",title:"Domain-Wide CVE Criticality Report",
- profile:["Dev Manager"],complexity:"Advanced",tier:"power",
+ profile:["Dev Manager","Cyber Team","CIO"],complexity:"Advanced",tier:"power",
  vars:[{name:"DOMAIN_NAME",desc:"Your Highlight domain name",ex:"ACME Corp"}],chain:{},
  tags:["vulnerability","cve","governance","portfolio"],
  prompt:"Using CAST Highlight\u2019s existing vulnerability data for the {{DOMAIN_NAME}} domain, generate a governance-ready CVE report:\n- Show total open CVE counts grouped by criticality: Critical, High, Medium, Low\n- Identify the top 10 most exposed applications ranked by number of Critical and High CVEs\n- List any Critical CVEs (CVSS \u2265 9.0) present in Highlight data for more than 90 days without remediation\n- Show the trend: is the overall domain CVE count improving or worsening vs the previous snapshot?\n- Provide an executive summary suitable for a CISO or board-level briefing"},
 {id:"s2",cat:"security",title:"Outdated / End-of-Life OSS Libraries",profile:["Dev Manager"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["security","oss","libraries","vulnerabilities"],prompt:"What open-source libraries in {{APP_NAME}} are outdated, end-of-life, or carry known security vulnerabilities — and which parts of the codebase are exposed?"},
-];
+]
 
 const PMAP=Object.fromEntries(P.map(p=>[p.id,p]));
-let S={cat:"all",profile:"all",product:"all",query:"",sel:null,vars:{}};
+
+// ── STATE ────────────────────────────────────────────────────────────
+let S={
+  uc:0,sub:null,ucOpen:{},
+  profile:"all",product:"all",query:"",
+  sel:null,vars:{}
+};
+
+// ── HELPERS ──────────────────────────────────────────────────────────
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function bdg(text,cls){return "<span class='bdg "+cls+"'>"+esc(text)+"</span>";}
+
+function getUC(p){return UC_MAP[p.id]||null;}
+function getUCDef(p){const m=getUC(p);return m?UCS.find(u=>u.id===m.uc):null;}
 
 function filt(){
   return P.filter(p=>{
-    if(S.cat!=="all"&&p.cat!==S.cat)return false;
+    const ucData=getUC(p);
+    if(S.uc!==0){
+      if(!ucData||ucData.uc!==S.uc)return false;
+      if(S.sub&&ucData.sub!==S.sub)return false;
+    }
     if(S.profile!=="all"&&!p.profile.includes(S.profile))return false;
     if(S.product!=="all"&&(p.prod||"imaging")!==S.product)return false;
-    if(S.query){const q=S.query.toLowerCase();return p.title.toLowerCase().includes(q)||p.prompt.toLowerCase().includes(q)||p.tags.some(t=>t.includes(q));}
+    if(S.query){
+      const q=S.query.toLowerCase();
+      return p.title.toLowerCase().includes(q)||p.prompt.toLowerCase().includes(q)||p.tags.some(t=>t.includes(q));
+    }
     return true;
   });
 }
 
-function sub(p){
-  let t=p.prompt;
-  (p.vars||[]).forEach(v=>{const val=S.vars[v.name]||("{{"+v.name+"}}");t=t.split("{{"+v.name+"}}").join(val);});
-  return t;
-}
-
-function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
-
-function bdg(text,cls){return "<span class='bdg "+cls+"'>"+esc(text)+"</span>";}
-
-function mcpPrompt(p){
-  const text=sub(p);
-  const prod=p.prod||"imaging";
-  if(prod==="highlight"){
-    if(text.toLowerCase().includes("cast highlight")||text.toLowerCase().includes("cast-highlight"))return text;
-    return "Use the cast-highlight MCP server for all tool calls.\n\n"+text;
-  }
-  if(prod==="gatekeeper"){
-    if(text.toLowerCase().includes("cast-gatekeeper")||text.toLowerCase().includes("gatekeeper"))return text;
-    return "Use the cast-gatekeeper MCP server for all tool calls.\n\n"+text;
-  }
-  if(text.toLowerCase().includes("cast imaging mcp")||text.toLowerCase().includes("cast-imaging"))return text;
-  return "Use the cast-imaging MCP server for all tool calls.\n\n"+text;
-}
-
+// ── SIDEBAR ──────────────────────────────────────────────────────────
 function renderSB(){
-  const counts={};P.forEach(p=>{counts[p.cat]=(counts[p.cat]||0)+1;});
+  const ucCounts={},subCounts={};
   const prodCounts={imaging:0,highlight:0,gatekeeper:0};
-  P.forEach(p=>{const pr=p.prod||"imaging";if(prodCounts[pr]!==undefined)prodCounts[pr]++;});
+
+  P.forEach(p=>{
+    const m=getUC(p);
+    if(m){
+      ucCounts[m.uc]=(ucCounts[m.uc]||0)+1;
+      const sk=m.uc+":"+m.sub;
+      subCounts[sk]=(subCounts[sk]||0)+1;
+    }
+    const pr=p.prod||"imaging";
+    if(prodCounts[pr]!==undefined)prodCounts[pr]++;
+  });
+
+  const ucHtml=UCS.map(uc=>{
+    const isOpen=S.ucOpen[uc.id];
+    const isAct=S.uc===uc.id&&S.sub===null;
+    const cnt=ucCounts[uc.id]||0;
+    const numEl=ucIcon(uc.id,uc.color,24);;
+    const arrow="<span class='uc-arr' style='transform:rotate("+(isOpen?"90deg":"0deg")+")'> ▸</span>";
+    const hdr="<button class='uc-btn"+(isAct?" act":"")+"' data-ucid='"+uc.id+"' onclick='toggleUCEl(this)'>"
+      +numEl+"<span class='uc-lbl'>"+esc(uc.label)+"</span>"
+      +"<span class='cc'>"+cnt+"</span>"+arrow+"</button>";
+    const subs=isOpen?uc.subs.map(sub=>{
+      const sk=uc.id+":"+sub.key;
+      const isSubAct=S.uc===uc.id&&S.sub===sub.key;
+      return "<button class='sub-btn"+(isSubAct?" act":"")+"' data-uc='"+uc.id+"' data-sub='"+sub.key+"' onclick='selSubEl(this)'>"
+        +"<span class='sub-dot'></span>"
+        +esc(sub.label)
+        +"<span class='cc'>"+(subCounts[sk]||0)+"</span></button>";
+    }).join(""):""
+    return hdr+subs;
+  }).join("");
 
   document.getElementById("sb").innerHTML=
-    CATS.map(c=>{
-      const cnt=c.id==="all"?P.length:(counts[c.id]||0);
-      return "<button class='cb"+(S.cat===c.id?" act":"")+"' onclick=\"selCat('"+c.id+"')\">"
-        +"<span class='ci' style='color:"+c.color+"'>"+c.icon+"</span>"
-        +"<span class='cl'>"+c.label+"</span>"
-        +"<span class='cc'>"+cnt+"</span></button>";
-    }).join("")
-    +"<div class='fs'><div class='ft'>CAST Products</div>"
-    +[["all","All Products",P.length],["imaging","Imaging",prodCounts.imaging],["highlight","Highlight",prodCounts.highlight],["gatekeeper","Gatekeeper",prodCounts.gatekeeper]].map(([v,l,n])=>
-      "<button class='fb"+(S.product===v?" act":"")+"' onclick=\"selProd('"+v+"')\">"
-      +"<span style='flex:1'>"+l+"</span>"
-      +"<span class='cc'>"+n+"</span>"
-      +"</button>"
+    "<div class='sb-section-title'>USE CASES</div>"
+    +"<button class='uc-all"+(S.uc===0?" act":"")+"' onclick='clearUC()'>"
+    +"<span style='font-size:9px;margin-right:2px'>◈</span> All Use Cases <span class='cc' style='margin-left:auto'>"+P.length+"</span></button>"
+    +ucHtml
+    +"<hr class='sb-divider'>"
+    +"<div class='sb-section-title'>User Profile</div>"
+    +"<div class='filter-section'>"
+    +["all","Developer","Architect","Dev Manager","CIO","Project Manager","Cyber Team"].map(pr=>
+      "<button class='fb"+(S.profile===pr?" act":"")+"' data-prof='"+pr+"' onclick='selProf(this.dataset.prof)'><span style='flex:1'>"+(pr==="all"?"All Profiles":pr)+"</span></button>"
     ).join("")+"</div>"
-    +"<div class='fs'><div class='ft'>User Profile</div>"
-    +["all","Developer","Architect","Dev Manager"].map(pr=>
-      "<button class='fb"+(S.profile===pr?" act":"")+"' onclick=\"selProf('"+pr+"')\">"+(pr==="all"?"All Profiles":pr)+"</button>"
+    +"<hr class='sb-divider'>"
+    +"<div class='sb-section-title'>CAST Products</div>"
+    +"<div class='filter-section'>"
+    +[["all","All Products",P.length],["imaging","Imaging",prodCounts.imaging],["highlight","Highlight",prodCounts.highlight],["gatekeeper","Gatekeeper",prodCounts.gatekeeper]].map(([v,l,n])=>
+      "<button class='fb"+(S.product===v?" act":"")+"' data-prod='"+v+"' onclick='selProd(this.dataset.prod)'><span style='flex:1'>"+l+"</span><span class='cc'>"+n+"</span></button>"
     ).join("")+"</div>";
 }
 
+// ── CARDS ────────────────────────────────────────────────────────────
 function renderCards(){
   const list=filt();
   document.getElementById("cnt").textContent=list.length;
@@ -309,24 +489,48 @@ function renderCards(){
     return;
   }
   cg.innerHTML=list.map(p=>{
-    const cat=CMAP[p.cat]||CMAP.all;
-    const hasChain=p.chain&&(p.chain.prev||p.chain.next);
-    return "<button class='card"+(S.sel&&S.sel.id===p.id?" sel":"")+"' onclick=\"selP('"+p.id+"')\">"
-      +"<div class='ch'><span class='cion' style='color:"+cat.color+"'>"+cat.icon+"</span>"
-      +"<div><div class='ct'>"+esc(p.title)+"</div>"
-      +"<div class='cc2' style='color:"+cat.color+"'>"+cat.label+"</div></div></div>"
-      +"<div class='cp'>"+esc(p.prompt.replace(/\n/g," ").substring(0,110))+"…</div>"
-      +"<div class='cf'>"
-      +bdg(p.complexity,"cplx-"+p.complexity)
-            +"</div></button>";
+    const ucDef=getUCDef(p);
+    const ucData=getUC(p);
+    const color=ucDef?ucDef.color:"#5f7a96";
+    const num=ucDef?ucDef.id:"·";
+    const subDef=ucDef&&ucData?ucDef.subs.find(s=>s.key===ucData.sub):null;
+    const subLabel=subDef?subDef.label:(ucDef?ucDef.label:"General");
+    const isSel=S.sel&&S.sel.id===p.id;
+    return "<button class='card"+(isSel?" sel":"")+" ' data-id='"+p.id+"' onclick='selP(this.dataset.id)'>"
+      +"<div class='card-top'>"
+      +ucIcon(num,color,38)
+      +"<div class='card-info'>"
+      +"<div class='card-title'>"+esc(p.title)+"</div>"
+      +"<div class='card-sub' style='color:"+color+"'>"+esc(subLabel)+"</div>"
+      +"</div></div>"
+      +"<div class='card-preview'>"+esc(p.prompt.split("\n").join(" ").substring(0,115))+"…</div>"
+      +"<div class='card-foot'>"+bdg(p.complexity,"cplx-"+p.complexity)
+      
+      +"</div></button>";
   }).join("");
 }
 
+// ── DETAIL ───────────────────────────────────────────────────────────
+function sub(p){
+  let t=p.prompt;
+  (p.vars||[]).forEach(v=>{const val=S.vars[v.name]||("{{"+v.name+"}}");t=t.split("{{"+v.name+"}}").join(val);});
+  return t;
+}
 function renderPText(p){
   return sub(p).split(/({{[^}]+}})/).map(part=>{
     if(/^\{\{[^}]+\}\}$/.test(part))return "<span class='vh'>"+esc(part)+"</span>";
     return esc(part);
   }).join("");
+}
+function mcpPrompt(p){
+  const text=sub(p);
+  const prod=p.prod||"imaging";
+  const servers={highlight:"cast-highlight",gatekeeper:"cast-gatekeeper",imaging:"cast-imaging"};
+  const srv=servers[prod]||"cast-imaging";
+  const markers={"cast-imaging":["cast imaging mcp","cast-imaging"],"cast-highlight":["cast highlight","cast-highlight"],"cast-gatekeeper":["cast-gatekeeper","gatekeeper"]};
+  const lower=text.toLowerCase();
+  if((markers[srv]||[]).some(m=>lower.includes(m)))return text;
+  return "Use the "+srv+" MCP server for all tool calls.\n\n"+text;
 }
 
 function renderDet(){
@@ -334,70 +538,76 @@ function renderDet(){
   if(!S.sel){det.classList.remove("open");det.innerHTML="";return;}
   det.classList.add("open");
   const p=S.sel;
-  const prevP=p.chain&&p.chain.prev?PMAP[p.chain.prev]:null;
-  const nextP=p.chain&&p.chain.next?PMAP[p.chain.next]:null;
+  const ucDef=getUCDef(p);
+  const color=ucDef?ucDef.color:"#5f7a96";
   const hasVars=(p.vars||[]).length>0;
   const allFilled=!hasVars||(p.vars||[]).every(v=>S.vars[v.name]&&S.vars[v.name].trim());
+  const prevP=p.chain&&p.chain.prev?PMAP[p.chain.prev]:null;
+  const nextP=p.chain&&p.chain.next?PMAP[p.chain.next]:null;
 
   det.innerHTML=
     "<div class='dh'>"
+    +ucIcon(ucDef?ucDef.id:1,color,42)
     +"<div style='flex:1'>"
     +"<div class='dt'>"+esc(p.title)+"</div>"
     +"<div style='display:flex;flex-wrap:wrap;gap:4px'>"
     +bdg(p.complexity,"cplx-"+p.complexity)
-    +bdg(p.tier,"tier-"+p.tier)
-    +p.profile.map(pr=>"<span class='bdg' style='background:"+PC[pr]+"15;color:"+PC[pr]+"'>"+pr+"</span>").join("")
+    +p.profile.map(pr=>"<span class='bdg' style='background:"+PC[pr]+"18;color:"+PC[pr]+"'>"+pr+"</span>").join("")
     +"</div></div>"
     +"<button class='dc' onclick='closeDet()'>×</button></div>"
 
-    +(prevP||nextP?
-      "<div class='chb'><span class='chl'>⛓ CHAIN</span>"
-      +(prevP?"<button class='chbtn' onclick=\"selP('"+prevP.id+"')\">← "+esc(prevP.title)+"</button>":"")
-      +(nextP?"<button class='chbtn' style='margin-left:auto' onclick=\"selP('"+nextP.id+"')\">"+esc(nextP.title)+" →</button>":"")
+    +(prevP||nextP?"<div class='chb'>"
+      +(prevP?"<button class='chbtn' data-id='"+prevP.id+"' onclick='selP(this.dataset.id)'>← "+esc(prevP.title)+"</button>":"")
+      +(nextP?"<button class='chbtn' style='margin-left:auto' data-id='"+nextP.id+"' onclick='selP(this.dataset.id)'>"+esc(nextP.title)+" →</button>":"")
       +"</div>":"")
 
-    +(hasVars?
-      "<div class='vs'>"
-      +"<div class='stl'>Fill in the variables</div>"
+    +(hasVars?"<div class='vs'><div class='stl'>Fill in the variables</div>"
       +p.vars.map(v=>
         "<label class='vl'>"+esc(v.name)+" <span class='vd'>— "+esc(v.desc)+"</span></label>"
-        +"<input class='vi' placeholder='e.g. "+esc(v.ex)+"'"
-        +" value='"+(S.vars[v.name]||"").replace(/'/g,"&#39;")+"'"
-        +" oninput=\"setVar('"+v.name+"',this.value)\">"
-      ).join("")
-      +"</div>":"")
+        +"<input class='vi' placeholder='e.g. "+esc(v.ex)+"' value='"+(S.vars[v.name]||"").replace(/'/g,"&#39;")+"' data-vname='"+v.name+"' oninput='setVar(this.dataset.vname,this.value)'>"
+      ).join("")+"</div>":"")
 
-    +"<div class='ps'>"
-    +"<div class='stl'>Prompt</div>"
+    +"<div class='ps'><div class='stl'>Prompt</div>"
     +"<div class='pb' id='ptxt'>"+renderPText(p)+"</div>"
-    +(p.expected?
-      "<div class='eb'><div class='et'>Expected Output</div><div class='ev'>"+esc(p.expected)+"</div></div>":""
-    )
+    +(p.expected?"<div class='eb'><div class='et'>Expected Output</div><div class='ev'>"+esc(p.expected)+"</div></div>":"")
     +"<div class='tr'>"+(p.tags||[]).map(t=>"<span class='tg'>"+esc(t)+"</span>").join("")+"</div>"
     +"</div>"
-
     +"<div class='act-area'>"
     +(hasVars&&!allFilled
-      ?"<button class='btn-copy' id='bcopy' style='opacity:.45;cursor:default'>Fill variables above to copy</button>"
+      ?"<button class='btn-copy' id='bcopy' style='opacity:.4;cursor:default'>Fill variables above to copy</button>"
       :"<button class='btn-copy' id='bcopy' onclick='doCopy()'>Copy Prompt</button>"
     )
-    +"<div class='copy-note'>Paste into VS Code Copilot Chat · CAST Imaging MCP will be used automatically</div>"
+    +"<div class='copy-note'>Paste into VS Code Copilot Chat · MCP server specified automatically</div>"
     +"</div>";
 }
 
+// ── ACTIONS ──────────────────────────────────────────────────────────
 function render(){renderSB();renderCards();renderDet();}
 
-function selCat(id){S.cat=id;renderSB();renderCards();}
-function selProf(p){S.profile=p;renderSB();renderCards();}
+function toggleUC(id){
+  S.ucOpen[id]=!S.ucOpen[id];
+  S.uc=id;S.sub=null;
+  renderSB();renderCards();
+}
+function toggleUCEl(el){toggleUC(parseInt(el.dataset.ucid));}
+function selSubEl(el){selSub(parseInt(el.dataset.uc),el.dataset.sub);}
+function selSub(ucId,sub){S.uc=ucId;S.sub=sub;renderSB();renderCards();}
+function clearUC(){S.uc=0;S.sub=null;renderSB();renderCards();}
 function selProd(v){S.product=v;renderSB();renderCards();}
-function selP(id){S.sel=PMAP[id];S.vars={};renderCards();renderDet();}
+function selProf(p){S.profile=p;renderSB();renderCards();}
+function selP(id){
+  const p=PMAP[id];
+  if(!p){console.warn("selP: prompt not found:",id);return;}
+  S.sel=p;S.vars={};
+  renderCards();renderDet();
+  document.getElementById("det").scrollTop=0;
+}
 function closeDet(){S.sel=null;renderCards();renderDet();}
+
 function setVar(name,val){
   S.vars[name]=val;
-  // Update only prompt text — no full re-render so focus stays in the input
   const ptxt=document.getElementById("ptxt");
   if(ptxt)ptxt.innerHTML=renderPText(S.sel);
-  // Update copy button state without rebuilding the panel
   const p=S.sel;
   const hasVars=(p.vars||[]).length>0;
   const allFilled=!hasVars||(p.vars||[]).every(v=>S.vars[v.name]&&S.vars[v.name].trim());
@@ -405,12 +615,10 @@ function setVar(name,val){
   if(btn){
     if(hasVars&&!allFilled){
       btn.textContent="Fill variables above to copy";
-      btn.style.opacity=".45";btn.style.cursor="default";
-      btn.onclick=null;
-    } else {
+      btn.style.opacity=".4";btn.style.cursor="default";btn.onclick=null;
+    }else{
       btn.textContent="Copy Prompt";
-      btn.style.opacity="1";btn.style.cursor="pointer";
-      btn.onclick=doCopy;
+      btn.style.opacity="1";btn.style.cursor="pointer";btn.onclick=doCopy;
     }
   }
 }
@@ -425,6 +633,9 @@ function doCopy(){
 }
 
 document.getElementById("sq").addEventListener("input",function(){S.query=this.value;renderCards();});
+
+// Open first UC by default for a nice initial state
+S.ucOpen[1]=true;
 render();
 </script>
 </body>
