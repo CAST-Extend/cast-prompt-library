@@ -193,6 +193,46 @@ const P=[
 {id:"o5",cat:"onboard",title:"Application Epics Discovery",profile:["Dev Manager","Architect"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Recipe"}],chain:{next:"o6"},tags:["onboarding","epics","planning","modernization"],prompt:"Could you give the potential list of epics for the {{APP_NAME}} application using CAST Imaging for context? Group transactions and business functions into logical epics that could form the basis of a modernization backlog."},
 {id:"o6",cat:"onboard",title:"Business Rules Documentation Package",profile:["Dev Manager","Architect"],complexity:"Advanced",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Recipe"}],chain:{prev:"o5"},tags:["onboarding","business-rules","documentation"],prompt:"Can you produce a business rules documentation for the {{APP_NAME}} application? Use CAST Imaging for context — retrieve transaction paths, source code snippets, and object relationships to extract and document the core business rules in a technology-agnostic way."},
 {id:"s1",cat:"security",title:"Critical CVE OSS Component Scan",profile:["Architect","Dev Manager"],complexity:"Intermediate",tier:"power",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"Shopizer-Backend"}],chain:{},tags:["security","cve","oss","vulnerabilities"],prompt:"Can you please tell me if the {{APP_NAME}} application is using 3rd party OSS components with critical CVEs? If yes, can you please list the objects using those unsecured 3rd party components and rank them by CVE severity?",expected:"5 critical CVEs; complete list of affected objects"},
+{id:"h1",cat:"quality",prod:"highlight",title:"Portfolio Tech Debt Investment Brief",
+ profile:["Dev Manager"],complexity:"Simple",tier:"starter",
+ vars:[{name:"DOMAIN_NAME",desc:"Your Highlight domain name",ex:"ACME Corp"}],chain:{},
+ tags:["tech-debt","benchmarking","portfolio","executive"],
+ prompt:"Using the latest CAST Highlight data for the {{DOMAIN_NAME}} domain, give me an executive investment brief:\n- Rank the top 5 most technically indebted applications by their Software Health Factor score\n- Show each app\u2019s cloud readiness score and whether the trend is improving or degrading\n- Identify applications with a health score below 50 and quantify the remediation effort\n- Recommend where to prioritize investment this quarter based on risk vs effort ratio"},
+{id:"h2",cat:"security",prod:"highlight",title:"OSS License Risk Executive Dashboard",
+ profile:["Dev Manager"],complexity:"Intermediate",tier:"starter",
+ vars:[{name:"DOMAIN_NAME",desc:"Your Highlight domain name",ex:"ACME Corp"}],chain:{},
+ tags:["oss","compliance","license","portfolio"],
+ prompt:"From the existing CAST Highlight analysis for the {{DOMAIN_NAME}} domain, produce an OSS license compliance report:\n- List all open-source licenses detected and classify each as Permissive, Weak Copyleft, Strong Copyleft, or Proprietary-Restricted\n- Identify applications with more than 3 high-risk licenses (GPL, AGPL, LGPL, or unknown)\n- Flag any license combinations that create legal conflicts within the same application\n- Summarize total OSS component count and the percentage that carries compliance risk"},
+{id:"h3",cat:"security",prod:"highlight",title:"OSS Third-Party Dependency Audit",
+ profile:["Architect"],complexity:"Intermediate",tier:"power",
+ vars:[{name:"APP_NAME",desc:"Application name in CAST Highlight",ex:"MyApp"}],chain:{},
+ tags:["oss","vulnerability","cve","dependencies"],
+ prompt:"Using the existing CAST Highlight analysis for {{APP_NAME}}, produce a full third-party dependency audit:\n- List all OSS components with their detected version, license type, and license risk level\n- Flag components with known CVEs, showing the CVE ID and CVSS score for each\n- Identify components that are outdated (a newer major version exists) or unmaintained\n- Group findings by risk level: Critical, High, Medium, Low\n- Provide a prioritized remediation list starting with the highest CVSS scores"},
+{id:"h4",cat:"quality",prod:"highlight",title:"Technical Debt Remediation Roadmap",
+ profile:["Architect"],complexity:"Advanced",tier:"power",
+ vars:[{name:"APP_NAME",desc:"Application name in CAST Highlight",ex:"MyApp"},{name:"TARGET_SCORE",desc:"Target software health score to reach",ex:"80"}],chain:{},
+ tags:["tech-debt","recommendations","roadmap"],
+ prompt:"Using the existing CAST Highlight data for {{APP_NAME}}, build a technical debt remediation roadmap:\n- Show the current Software Health Factor score broken down by the four pillars: Complexity, Duplication, Dependency Risk, and Volume\n- List the top 10 remediation recommendations ranked by effort-to-impact ratio\n- For each recommendation show the number of violations, estimated effort in days, and expected score improvement\n- Identify the minimum set of fixes needed to bring the overall health score above {{TARGET_SCORE}}\n- Flag any debt category trending worse since the previous Highlight snapshot"},
+{id:"h5",cat:"quality",prod:"highlight",title:"Technology & Framework Obsolescence Review",
+ profile:["Architect"],complexity:"Intermediate",tier:"starter",
+ vars:[{name:"DOMAIN_NAME",desc:"Your Highlight domain name",ex:"ACME Corp"}],chain:{},
+ tags:["tech-debt","frameworks","obsolescence","modernization"],
+ prompt:"From the existing CAST Highlight analysis for the {{DOMAIN_NAME}} domain, produce a technology obsolescence report:\n- List all frameworks, languages, and third-party technologies detected across the portfolio\n- Flag any technology that is end-of-life, past vendor end-of-support, or has had no major release in over 2 years\n- For each obsolete technology identify which applications are affected\n- Group affected applications by migration urgency: Immediate (EOL, no security patches), Medium-term (approaching EOL), Watch (stagnant community activity)\n- Recommend a migration priority sequence based on risk exposure and number of affected applications"},
+{id:"h7",cat:"security",prod:"highlight",title:"OSS Vulnerability Exposure Report",
+ profile:["Developer"],complexity:"Intermediate",tier:"power",
+ vars:[{name:"APP_NAME",desc:"Application name in CAST Highlight",ex:"MyApp"},{name:"CVSS_THRESHOLD",desc:"Minimum CVSS score to flag",ex:"7"}],chain:{},
+ tags:["oss","vulnerability","cvss","security-gate"],
+ prompt:"Using the latest CAST Highlight data for {{APP_NAME}}, produce an OSS vulnerability exposure report:\n- List all OSS components with known CVEs sorted by CVSS score descending\n- For each vulnerability show: CVE ID, CVSS score, affected component and version, and the fixed version if available\n- Flag any vulnerability with CVSS score \u2265 {{CVSS_THRESHOLD}} that has a fix available but has not yet been upgraded\n- Summarize total exposure: count of Critical, High, Medium, and Low CVEs\n- Give a clear go / no-go recommendation on whether the application is safe to release based on the threshold"},
+{id:"h8",cat:"quality",prod:"highlight",title:"Multi-App Tech Debt Comparison",
+ profile:["Dev Manager"],complexity:"Intermediate",tier:"power",
+ vars:[{name:"APP_1",desc:"First application name",ex:"App-A"},{name:"APP_2",desc:"Second application name",ex:"App-B"},{name:"APP_3",desc:"Third application name",ex:"App-C"}],chain:{},
+ tags:["tech-debt","benchmarking","comparison","portfolio"],
+ prompt:"Using the existing CAST Highlight data, compare the technical health of {{APP_1}}, {{APP_2}}, and {{APP_3}}:\n- Show each application\u2019s current Software Health Factor score and grade\n- Compare debt breakdown across the four pillars: Complexity, Duplication, Dependency Risk, and Volume\n- Identify which application has the highest OSS risk and summarize the key vulnerabilities\n- Rank the three applications by modernization urgency and explain the rationale\n- Flag any application where the health score has degraded compared to the previous Highlight snapshot"},
+{id:"h9",cat:"security",prod:"highlight",title:"Domain-Wide CVE Criticality Report",
+ profile:["Dev Manager"],complexity:"Advanced",tier:"power",
+ vars:[{name:"DOMAIN_NAME",desc:"Your Highlight domain name",ex:"ACME Corp"}],chain:{},
+ tags:["vulnerability","cve","governance","portfolio"],
+ prompt:"Using CAST Highlight\u2019s existing vulnerability data for the {{DOMAIN_NAME}} domain, generate a governance-ready CVE report:\n- Show total open CVE counts grouped by criticality: Critical, High, Medium, Low\n- Identify the top 10 most exposed applications ranked by number of Critical and High CVEs\n- List any Critical CVEs (CVSS \u2265 9.0) present in Highlight data for more than 90 days without remediation\n- Show the trend: is the overall domain CVE count improving or worsening vs the previous snapshot?\n- Provide an executive summary suitable for a CISO or board-level briefing"},
 {id:"s2",cat:"security",title:"Outdated / End-of-Life OSS Libraries",profile:["Dev Manager"],complexity:"Simple",tier:"starter",vars:[{name:"APP_NAME",desc:"Application name in CAST Imaging",ex:"MyApp"}],chain:{},tags:["security","oss","libraries","vulnerabilities"],prompt:"What open-source libraries in {{APP_NAME}} are outdated, end-of-life, or carry known security vulnerabilities — and which parts of the codebase are exposed?"},
 ];
 
@@ -221,9 +261,17 @@ function bdg(text,cls){return "<span class='bdg "+cls+"'>"+esc(text)+"</span>";}
 
 function mcpPrompt(p){
   const text=sub(p);
-  const header="Use the cast-imaging MCP server for all tool calls.\n\n";
-  if(text.toLowerCase().includes("cast imaging mcp")||text.toLowerCase().includes("cast-imaging")){return text;}
-  return header+text;
+  const prod=p.prod||"imaging";
+  if(prod==="highlight"){
+    if(text.toLowerCase().includes("cast highlight")||text.toLowerCase().includes("cast-highlight"))return text;
+    return "Use the cast-highlight MCP server for all tool calls.\n\n"+text;
+  }
+  if(prod==="gatekeeper"){
+    if(text.toLowerCase().includes("cast-gatekeeper")||text.toLowerCase().includes("gatekeeper"))return text;
+    return "Use the cast-gatekeeper MCP server for all tool calls.\n\n"+text;
+  }
+  if(text.toLowerCase().includes("cast imaging mcp")||text.toLowerCase().includes("cast-imaging"))return text;
+  return "Use the cast-imaging MCP server for all tool calls.\n\n"+text;
 }
 
 function renderSB(){
